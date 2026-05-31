@@ -1,0 +1,44 @@
+name: campus_lost_found
+description: Campus Lost & Found App for BUITEMS university students.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase
+  firebase_core: ^3.13.0
+  firebase_auth: ^5.5.1
+  cloud_firestore: ^5.6.0
+  firebase_storage: ^12.4.3
+
+  # State management
+  provider: ^6.1.5
+
+  # UI & fonts
+  google_fonts: ^6.2.1
+  cached_network_image: ^3.4.1
+
+  # Image picker
+  image_picker: ^1.1.2
+
+  # Utilities
+  intl: ^0.19.0
+  url_launcher: ^6.3.1
+  shared_preferences: ^2.3.3
+  uuid: ^4.5.1
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
