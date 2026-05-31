@@ -18,6 +18,11 @@ class ItemDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ext = context.ext;
     final auth = context.watch<AuthProvider>();
+    // Resolve a live copy from the provider stream so status updates rebuild this screen.
+    final liveItem = context.watch<ItemsProvider>().all.firstWhere(
+      (i) => i.id == item.id,
+      orElse: () => item,
+    );
     final isMine = auth.user?.uid == item.postedByUid;
     final accent = item.isLost ? ext.lostColor : ext.foundColor;
     final parts = item.postedBy.split(' ');
@@ -80,7 +85,7 @@ class ItemDetailScreen extends StatelessWidget {
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(child: Text(item.title, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, letterSpacing: -0.44, color: ext.textColor, height: 1.2))),
                 const SizedBox(width: 12),
-                StatusBadge(status: item.status),
+                StatusBadge(status: liveItem.status),
               ]),
               const SizedBox(height: 6),
               Text('Posted ${item.date.toLowerCase()} · ${item.categoryLabel}',
@@ -95,7 +100,7 @@ class ItemDetailScreen extends StatelessWidget {
                   _MetaTile(icon: Icons.location_on_outlined, label: 'Location', value: item.location, ext: ext),
                   _MetaTile(icon: Icons.calendar_today_outlined, label: item.isLost ? 'Lost on' : 'Found on', value: item.date.split(',')[0], ext: ext),
                   _MetaTile(icon: Icons.label_outline, label: 'Category', value: item.categoryLabel, ext: ext),
-                  _MetaTile(icon: Icons.access_time_outlined, label: 'Status', value: item.status, ext: ext, accent: accent),
+                  _MetaTile(icon: Icons.access_time_outlined, label: 'Status', value: liveItem.status, ext: ext, accent: accent),
                 ],
               ),
               const SizedBox(height: 20),
@@ -177,7 +182,7 @@ class ItemDetailScreen extends StatelessWidget {
                     Text('Update status', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: ext.textColor)),
                     const SizedBox(height: 10),
                     Wrap(spacing: 8, children: ['Active', 'Claimed', 'Returned', 'Closed'].map((s) =>
-                      _StatusChip(label: s, selected: item.status == s, ext: ext,
+                      _StatusChip(label: s, selected: liveItem.status == s, ext: ext,
                         onTap: () => context.read<ItemsProvider>().updateStatus(item.id, s)),
                     ).toList()),
                   ]),
