@@ -147,7 +147,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'BUITEMS students only · verified by university email',
+                    'BUITEMS Students only',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 11.5, color: ext.textFaintColor),
                   ),

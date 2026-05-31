@@ -142,7 +142,7 @@ class _Step1 extends StatelessWidget {
           style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700, letterSpacing: -0.52, color: ext.textColor),
         ),
         const SizedBox(height: 6),
-        Text("We'll send a verification link to your BUITEMS email.",
+        Text('Use your BUITEMS email to create your account.',
           style: TextStyle(fontSize: 15, color: ext.textMutedColor),
         ),
         const SizedBox(height: 24),
@@ -174,7 +174,7 @@ class _Step1 extends StatelessWidget {
           controller: pwCtrl,
           obscureText: !showPw,
           decoration: InputDecoration(
-            hintText: 'Min. 8 characters',
+            hintText: 'Min. 6 characters',
             prefixIcon: const Icon(Icons.lock_outline, size: 20),
             fillColor: ext.surfaceColor,
             suffixIcon: GestureDetector(

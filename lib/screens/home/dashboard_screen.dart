@@ -10,11 +10,11 @@ import '../item_detail_screen.dart';
 import '../search_screen.dart';
 import '../add_item_screen.dart';
 import '../my_posts_screen.dart';
-import '../profile_screen.dart';
 import '../notifications_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  final VoidCallback? onProfileTap;
+  const DashboardScreen({super.key, this.onProfileTap});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class DashboardScreen extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen())),
+                      onTap: () => onProfileTap?.call(),
                       child: Row(children: [
                         AvatarWidget(name: user?.name ?? '', size: 40),
                         const SizedBox(width: 12),

@@ -53,7 +53,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
   Widget build(BuildContext context) {
     final ext = context.ext;
     final screens = [
-      const DashboardScreen(),
+      DashboardScreen(onProfileTap: () => setState(() => _tab = 3)),
       const LostScreen(),
       const FoundScreen(),
       const ProfileScreen(),
