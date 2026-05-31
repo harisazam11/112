@@ -86,13 +86,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       fillColor: ext.surfaceColor,
                       suffixIcon: GestureDetector(
                         onTap: () => setState(() => _showPw = !_showPw),
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 14),
-                          child: Text(
-                            _showPw ? 'HIDE' : 'SHOW',
-                            style: TextStyle(
-                              fontSize: 11.5, fontWeight: FontWeight.w700,
-                              color: ext.textMutedColor,
+                        child: Align(
+                          alignment: Alignment.center,
+                          widthFactor: 1.0,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 14),
+                            child: Text(
+                              _showPw ? 'HIDE' : 'SHOW',
+                              style: TextStyle(
+                                fontSize: 11.5, fontWeight: FontWeight.w700,
+                                color: ext.textMutedColor,
+                              ),
                             ),
                           ),
                         ),
@@ -179,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final ok = await context.read<AuthProvider>().sendPasswordReset(_emailCtrl.text);
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(ok ? 'Reset link sent — check your inbox' : 'Failed to send reset email'),
+      content: Text(ok ? 'Reset link sent. Check your inbox.' : 'Failed to send reset email'),
     ));
   }
 }

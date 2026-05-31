@@ -179,10 +179,14 @@ class _Step1 extends StatelessWidget {
             fillColor: ext.surfaceColor,
             suffixIcon: GestureDetector(
               onTap: onTogglePw,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 14),
-                child: Text(showPw ? 'HIDE' : 'SHOW',
-                  style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: ext.textMutedColor)),
+              child: Align(
+                alignment: Alignment.center,
+                widthFactor: 1.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 14),
+                  child: Text(showPw ? 'HIDE' : 'SHOW',
+                    style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: ext.textMutedColor)),
+                ),
               ),
             ),
           ),

@@ -6,7 +6,6 @@ import '../providers/items_provider.dart';
 import '../providers/theme_provider.dart';
 import '../widgets/avatar_widget.dart';
 import 'my_posts_screen.dart';
-import 'admin_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -83,9 +82,9 @@ class ProfileScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white.withAlpha(46), borderRadius: BorderRadius.circular(99)),
                     child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(Icons.shield_outlined, size: 10, color: Colors.white),
+                      Icon(Icons.school_outlined, size: 10, color: Colors.white),
                       SizedBox(width: 4),
-                      Text('VERIFIED · STUDENT',
+                      Text('STUDENT',
                         style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: Colors.white)),
                     ]),
                   ),
@@ -131,8 +130,6 @@ class ProfileScreen extends StatelessWidget {
             child: Column(children: [
               _LinkRow(icon: Icons.label_outline, label: 'My posts', hint: '$totalPosts', ext: ext,
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MyPostsScreen()))),
-              _LinkRow(icon: Icons.shield_outlined, label: 'Admin tools', hint: 'Moderator preview', ext: ext,
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminScreen()))),
               _LinkRow(icon: Icons.notifications_outlined, label: 'Notifications', ext: ext),
               _LinkRow(icon: Icons.tune_outlined, label: 'Preferences', ext: ext),
               _LinkRow(icon: Icons.lock_outline, label: 'Privacy & data', last: true, ext: ext),

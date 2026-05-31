@@ -10,7 +10,6 @@ import '../item_detail_screen.dart';
 import '../search_screen.dart';
 import '../add_item_screen.dart';
 import '../my_posts_screen.dart';
-import '../admin_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -50,7 +49,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   _IconBtn(
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminScreen())),
+                    onTap: () {},
                     badge: true,
                     child: const Icon(Icons.notifications_outlined, size: 18),
                   ),
@@ -81,7 +80,7 @@ class DashboardScreen extends StatelessWidget {
                       const Text('Lost something today?',
                         style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: -0.44)),
                       const SizedBox(height: 4),
-                      const Text('Post it — chances are someone already saw it.',
+                      const Text('Post it. Chances are someone already saw it.',
                         style: TextStyle(fontSize: 13, color: Color(0xD9FFFFFF))),
                       const SizedBox(height: 14),
                       Row(children: [

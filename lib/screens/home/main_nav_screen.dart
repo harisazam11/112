@@ -170,7 +170,7 @@ class _AddChoiceSheet extends StatelessWidget {
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: ext.textColor),
         ),
         const SizedBox(height: 6),
-        Text('Pick the right type — it changes how others can help.',
+        Text('Pick the right type. It changes how others can help.',
           style: TextStyle(fontSize: 14, color: ext.textMutedColor),
         ),
         const SizedBox(height: 20),

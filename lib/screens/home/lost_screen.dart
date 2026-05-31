@@ -204,7 +204,7 @@ class _EmptyState extends StatelessWidget {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: ext.textColor)),
         const SizedBox(height: 8),
         SizedBox(width: 260, child: Text(
-          isLost ? 'Be the first to post — someone might have already seen it.'
+          isLost ? 'Be the first to post. Someone might have already seen it.'
                  : 'Found something? Help someone get it back.',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 14, color: ext.textMutedColor),

@@ -154,8 +154,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
               ]),
               const SizedBox(height: 8),
               Text(
-                _isLost ? 'Describe what you lost in detail — small specifics help a lot.'
-                         : "Help return it. Don't share too many private details publicly.",
+                _isLost ? 'Describe what you lost. Small details help a lot.'
+                         : "Help return it. Only share details you're comfortable with.",
                 style: TextStyle(fontSize: 13.5, color: ink.withAlpha(192)),
               ),
             ]),
@@ -208,7 +208,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
               TextFormField(
                 controller: _titleCtrl,
                 decoration: InputDecoration(
-                  hintText: _isLost ? 'e.g. Black wallet with leather strap' : 'e.g. SanDisk USB drive — red',
+                  hintText: _isLost ? 'e.g. Black wallet with leather strap' : 'e.g. SanDisk USB drive, red',
                   fillColor: ext.surfaceColor,
                 ),
               ),

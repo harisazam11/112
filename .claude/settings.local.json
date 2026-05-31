@@ -13,7 +13,8 @@
       "PowerShell(curl.exe --version | Select-Object -First 1)",
       "Bash(flutter run *)",
       "Bash(Get-ChildItem -Path \"D:\\\\BUITEMS SE-06\\\\Computer Networks\\\\Ms Poma Panezai\\\\Projects\\\\Bonus Exercise\\\\Campus Lost & Found App\\\\lib\" -Recurse -Filter \"*.dart\")",
-      "Bash(Select-Object -ExpandProperty FullName)"
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(flutter analyze *)"
     ]
   }
 }

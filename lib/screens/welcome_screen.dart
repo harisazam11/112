@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../core/app_theme.dart';
+import '../providers/theme_provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -27,7 +30,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final ext = context.ext;
+    final theme = context.watch<ThemeProvider>();
+    final topPad = MediaQuery.of(context).padding.top;
+
     return Scaffold(
+      backgroundColor: ext.bgColor,
       body: Column(children: [
         // Hero section
         Expanded(
@@ -53,7 +61,26 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               // Floating cards
               Positioned(top: 80, left: 24, child: _floatCard('LOST', 'Student ID', Icons.credit_card, const Color(0xFFFFEAE7), const Color(0xFFF25C54), const Color(0xFF8E1F18), 0, _floatCtrl)),
               Positioned(top: 160, right: 30, child: _floatCard('FOUND', 'Calculator', Icons.calculate, const Color(0xFFDDF7EC), const Color(0xFF10B981), const Color(0xFF075B3B), 0.25, _floatCtrl)),
-              Positioned(bottom: 100, left: 40, child: _floatCard('FOUND', 'Wallet — cafe', Icons.account_balance_wallet, const Color(0xFFDDF7EC), const Color(0xFF10B981), const Color(0xFF075B3B), 0.5, _floatCtrl, reverse: true)),
+              Positioned(bottom: 100, left: 40, child: _floatCard('FOUND', 'Wallet (cafe)', Icons.account_balance_wallet, const Color(0xFFDDF7EC), const Color(0xFF10B981), const Color(0xFF075B3B), 0.5, _floatCtrl, reverse: true)),
+              // Dark mode toggle
+              Positioned(
+                top: topPad + 10,
+                right: 16,
+                child: GestureDetector(
+                  onTap: () => context.read<ThemeProvider>().toggle(),
+                  child: Container(
+                    width: 36, height: 36,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(46),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      theme.isDark ? Icons.wb_sunny_outlined : Icons.dark_mode_outlined,
+                      size: 18, color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             ]),
           ),
         ),
@@ -68,20 +95,20 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Text(
+                  Text(
                     'Lost something\non campus?',
                     style: TextStyle(
                       fontSize: 26, fontWeight: FontWeight.w700,
                       letterSpacing: -0.52, height: 1.2,
-                      color: Color(0xFF0E0E14),
+                      color: ext.textColor,
                     ),
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Post it. Browse what others found. Get back what's yours — quickly and safely.",
+                    'Post your lost item or browse what others found on campus.',
                     style: TextStyle(
                       fontSize: 15, height: 1.45,
-                      color: Colors.grey.shade600,
+                      color: ext.textMutedColor,
                     ),
                   ),
                 ]),
@@ -108,10 +135,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     child: OutlinedButton(
                       onPressed: () => Navigator.pushNamed(context, '/login'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: const Color(0xFF0E0E14),
-                        side: const BorderSide(color: Color(0xFFDCDCE2)),
+                        foregroundColor: ext.textColor,
+                        side: BorderSide(color: ext.borderColor),
                         shape: const StadiumBorder(),
-                        backgroundColor: const Color(0xFFF2F2F7),
+                        backgroundColor: ext.surface2Color,
                       ),
                       child: const Text('I already have an account',
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
@@ -119,10 +146,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
+                  Text(
                     'BUITEMS students only · verified by university email',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 11.5, color: Color(0xFF9A9AAE)),
+                    style: TextStyle(fontSize: 11.5, color: ext.textFaintColor),
                   ),
                 ]),
               ],
