@@ -162,7 +162,10 @@ class _FilterChip extends StatelessWidget {
     Color bg = active
         ? (type == 'lost' ? ext.lostColor : type == 'found' ? ext.foundColor : ext.textColor)
         : ext.surfaceColor;
-    Color fg = active ? Colors.white : ext.textColor;
+    // When active bg is ext.textColor, use ext.bgColor for text so contrast holds in both modes.
+    Color fg = active
+        ? (type == 'lost' || type == 'found' ? Colors.white : ext.bgColor)
+        : ext.textColor;
     Color border = active ? bg : ext.borderStrongColor;
 
     return GestureDetector(

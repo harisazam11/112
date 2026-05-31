@@ -251,8 +251,8 @@ class _FilterChip extends StatelessWidget {
           borderRadius: BorderRadius.circular(999),
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          if (icon != null) ...[Icon(icon, size: 12, color: active ? Colors.white : ext.textMutedColor), const SizedBox(width: 4)],
-          Text(label, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500, color: active ? Colors.white : ext.textColor)),
+          if (icon != null) ...[Icon(icon, size: 12, color: active ? ext.bgColor : ext.textMutedColor), const SizedBox(width: 4)],
+          Text(label, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500, color: active ? ext.bgColor : ext.textColor)),
         ]),
       ),
     );
