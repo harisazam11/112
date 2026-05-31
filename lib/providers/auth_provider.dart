@@ -102,6 +102,7 @@ class AuthProvider extends ChangeNotifier {
         'department': department,
         'semester': semester,
       });
+      await _service.updatePosterInfo(_user!.uid, name.trim(), semester);
       _user = await _service.getCurrentUserModel();
       return true;
     } catch (e) {

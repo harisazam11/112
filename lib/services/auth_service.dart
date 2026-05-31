@@ -59,6 +59,20 @@ class AuthService {
   Future<void> updateUserProfile(String uid, Map<String, dynamic> data) =>
       _db.collection('users').doc(uid).update(data);
 
+  /// Back-fills the denormalized poster fields on every item the user created.
+  Future<void> updatePosterInfo(String uid, String name, String semester) async {
+    final snap = await _db
+        .collection('items')
+        .where('postedByUid', isEqualTo: uid)
+        .get();
+    if (snap.docs.isEmpty) return;
+    final batch = _db.batch();
+    for (final doc in snap.docs) {
+      batch.update(doc.reference, {'postedBy': name, 'semester': semester});
+    }
+    await batch.commit();
+  }
+
   Future<void> sendPasswordReset(String email) =>
       _auth.sendPasswordResetEmail(email: email.trim());
 }

@@ -115,6 +115,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               const SizedBox(height: 24),
 
+              // Name
               _FieldLabel('Full name', ext),
               const SizedBox(height: 6),
               TextField(
@@ -128,19 +129,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               const SizedBox(height: 14),
 
-              _FieldLabel('Phone number', ext),
+              // Email — read-only display
+              _FieldLabel('Email', ext),
               const SizedBox(height: 6),
-              TextField(
-                controller: _phoneCtrl,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  hintText: '+92 3xx xxxxxxx',
-                  prefixIcon: const Icon(Icons.phone_outlined, size: 20),
-                  fillColor: ext.surfaceColor,
+              GestureDetector(
+                onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Email cannot be changed in this version.')),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: ext.surface2Color,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: ext.borderStrongColor),
+                  ),
+                  child: Row(children: [
+                    Icon(Icons.mail_outline, size: 20, color: ext.textMutedColor),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text(user.email,
+                      style: TextStyle(fontSize: 15, color: ext.textMutedColor))),
+                    Icon(Icons.lock_outline, size: 16, color: ext.textFaintColor),
+                  ]),
                 ),
               ),
               const SizedBox(height: 14),
 
+              // Department
               _FieldLabel('Department', ext),
               const SizedBox(height: 6),
               DropdownButtonFormField<String>(
@@ -156,6 +170,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               const SizedBox(height: 14),
 
+              // Semester
               _FieldLabel('Semester', ext),
               const SizedBox(height: 6),
               DropdownButtonFormField<String>(
@@ -168,6 +183,50 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 dropdownColor: ext.surfaceColor,
                 borderRadius: BorderRadius.circular(12),
                 style: TextStyle(fontSize: 15, color: ext.textColor),
+              ),
+              const SizedBox(height: 14),
+
+              // Phone
+              _FieldLabel('Phone number', ext),
+              const SizedBox(height: 6),
+              TextField(
+                controller: _phoneCtrl,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  hintText: '+92 3xx xxxxxxx',
+                  prefixIcon: const Icon(Icons.phone_outlined, size: 20),
+                  fillColor: ext.surfaceColor,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Change password row
+              GestureDetector(
+                onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Changing password can be implemented at production level.')),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: ext.surfaceColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: ext.borderStrongColor),
+                  ),
+                  child: Row(children: [
+                    Container(
+                      width: 32, height: 32,
+                      decoration: BoxDecoration(
+                        color: ext.primarySoftColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(Icons.lock_reset_outlined, size: 16, color: ext.primaryColor),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text('Change password',
+                      style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w500, color: ext.textColor))),
+                    Icon(Icons.chevron_right, size: 16, color: ext.textMutedColor),
+                  ]),
+                ),
               ),
               const SizedBox(height: 28),
 

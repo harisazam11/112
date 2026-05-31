@@ -25,11 +25,11 @@ class ItemDetailScreen extends StatelessWidget {
     );
     final isMine = auth.user?.uid == item.postedByUid;
     final accent = item.isLost ? ext.lostColor : ext.foundColor;
-    final parts = item.postedBy.split(' ');
-    final displayName = item.privacy
+    final parts = liveItem.postedBy.split(' ');
+    final displayName = liveItem.privacy
         ? parts.asMap().entries.map((e) =>
             e.key == 1 ? '${e.value[0]}••••' : e.value).join(' ')
-        : item.postedBy;
+        : liveItem.postedBy;
 
     return Scaffold(
       backgroundColor: ext.bgColor,
@@ -122,24 +122,24 @@ class ItemDetailScreen extends StatelessWidget {
                   border: Border.all(color: ext.borderColor),
                 ),
                 child: Row(children: [
-                  AvatarWidget(name: item.postedBy, size: 44),
+                  AvatarWidget(name: liveItem.postedBy, size: 44),
                   const SizedBox(width: 12),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(children: [
                       Text(displayName, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: ext.textColor)),
-                      if (item.privacy) ...[
+                      if (liveItem.privacy) ...[
                         const SizedBox(width: 6),
                         Icon(Icons.shield_outlined, size: 13, color: ext.primaryColor),
                       ],
                     ]),
-                    Text(item.semester, style: TextStyle(fontSize: 12, color: ext.textMutedColor)),
+                    Text(liveItem.semester, style: TextStyle(fontSize: 12, color: ext.textMutedColor)),
                   ])),
                   OutlinedButton(
                     onPressed: () => Navigator.push(context, MaterialPageRoute(
                       builder: (_) => PosterScreen(
-                        name: item.postedBy,
-                        uid: item.postedByUid,
-                        semester: item.semester,
+                        name: liveItem.postedBy,
+                        uid: liveItem.postedByUid,
+                        semester: liveItem.semester,
                       ),
                     )),
                     style: OutlinedButton.styleFrom(
@@ -156,7 +156,7 @@ class ItemDetailScreen extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Privacy note
-              if (item.privacy) Container(
+              if (liveItem.privacy) Container(
                 padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
                 decoration: BoxDecoration(
                   color: ext.primarySoftColor, borderRadius: BorderRadius.circular(12)),
