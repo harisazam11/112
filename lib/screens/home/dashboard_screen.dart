@@ -166,7 +166,7 @@ class DashboardScreen extends StatelessWidget {
                   Text('Recent activity', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: ext.textColor, letterSpacing: -0.17)),
                   TextButton(
                     onPressed: () {},
-                    child: const Text('See all', style: TextStyle(color: Color(0xFF6E4FF6), fontWeight: FontWeight.w600)),
+                    child: Text('See all', style: TextStyle(color: ext.primaryColor, fontWeight: FontWeight.w600)),
                   ),
                 ]),
               ),

@@ -180,8 +180,6 @@ class _AddChoiceSheet extends StatelessWidget {
           subtitle: 'Post a "lost" notice so others on campus can keep an eye out.',
           icon: Icons.search_off,
           color: const Color(0xFFF25C54),
-          softColor: const Color(0xFFFFEAE7),
-          inkColor: const Color(0xFF8E1F18),
           onTap: () => onPick('lost'),
         ),
         const SizedBox(height: 12),
@@ -191,8 +189,6 @@ class _AddChoiceSheet extends StatelessWidget {
           subtitle: "Help return it to its owner. You'll set the pickup details.",
           icon: Icons.check_circle_outline,
           color: const Color(0xFF10B981),
-          softColor: const Color(0xFFDDF7EC),
-          inkColor: const Color(0xFF075B3B),
           onTap: () => onPick('found'),
         ),
         const SizedBox(height: 16),
@@ -225,26 +221,28 @@ class _AddChoiceSheet extends StatelessWidget {
 class _ChoiceTile extends StatelessWidget {
   final String type, title, subtitle;
   final IconData icon;
-  final Color color, softColor, inkColor;
+  final Color color;
   final VoidCallback onTap;
 
   const _ChoiceTile({
     required this.type, required this.title, required this.subtitle,
-    required this.icon, required this.color, required this.softColor,
-    required this.inkColor, required this.onTap,
+    required this.icon, required this.color, required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final ext = context.ext;
+    final tileInkColor = type == 'lost' ? ext.lostInkColor : ext.foundInkColor;
+    final tileSoftColor = type == 'lost' ? ext.lostSoftColor : ext.foundSoftColor;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight,
-            colors: [softColor, context.ext.surfaceColor]),
+            colors: [tileSoftColor, ext.surfaceColor]),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: softColor),
+          border: Border.all(color: tileSoftColor),
         ),
         child: Row(children: [
           Container(
@@ -258,11 +256,11 @@ class _ChoiceTile extends StatelessWidget {
           ),
           const SizedBox(width: 14),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: inkColor)),
+            Text(title, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: tileInkColor)),
             const SizedBox(height: 4),
-            Text(subtitle, style: TextStyle(fontSize: 13.5, color: context.ext.textMutedColor)),
+            Text(subtitle, style: TextStyle(fontSize: 13.5, color: ext.textMutedColor)),
           ])),
-          Icon(Icons.chevron_right, color: context.ext.textMutedColor, size: 20),
+          Icon(Icons.chevron_right, color: ext.textMutedColor, size: 20),
         ]),
       ),
     );

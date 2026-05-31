@@ -207,9 +207,9 @@ class _Step1 extends StatelessWidget {
         const SizedBox(height: 16),
         Center(child: GestureDetector(
           onTap: onLoginTap,
-          child: const Text.rich(TextSpan(children: [
-            TextSpan(text: 'Already have an account? ', style: TextStyle(color: Color(0xFF9A9AAE), fontSize: 13.5)),
-            TextSpan(text: 'Sign in', style: TextStyle(color: Color(0xFF6E4FF6), fontWeight: FontWeight.w600, fontSize: 13.5)),
+          child: Text.rich(TextSpan(children: [
+            TextSpan(text: 'Already have an account? ', style: TextStyle(color: ext.textFaintColor, fontSize: 13.5)),
+            TextSpan(text: 'Sign in', style: TextStyle(color: ext.primaryColor, fontWeight: FontWeight.w600, fontSize: 13.5)),
           ])),
         )),
       ]),
@@ -300,9 +300,9 @@ class _Step2 extends StatelessWidget {
         const SizedBox(height: 16),
         Center(child: GestureDetector(
           onTap: onLoginTap,
-          child: const Text.rich(TextSpan(children: [
-            TextSpan(text: 'Already have an account? ', style: TextStyle(color: Color(0xFF9A9AAE), fontSize: 13.5)),
-            TextSpan(text: 'Sign in', style: TextStyle(color: Color(0xFF6E4FF6), fontWeight: FontWeight.w600, fontSize: 13.5)),
+          child: Text.rich(TextSpan(children: [
+            TextSpan(text: 'Already have an account? ', style: TextStyle(color: ext.textFaintColor, fontSize: 13.5)),
+            TextSpan(text: 'Sign in', style: TextStyle(color: ext.primaryColor, fontWeight: FontWeight.w600, fontSize: 13.5)),
           ])),
         )),
       ]),
