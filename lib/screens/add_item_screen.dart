@@ -177,16 +177,36 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   border: Border.all(color: ext.borderStrongColor, width: 1.5, style: BorderStyle.solid),
                 ),
                 child: Column(children: [
-                  Container(
-                    height: 140, width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: ext.surface2Color, borderRadius: BorderRadius.circular(12),
-                      image: _imageFile != null ? DecorationImage(image: FileImage(_imageFile!), fit: BoxFit.cover) : null,
+                  GestureDetector(
+                    onTap: _imageFile != null ? _viewImage : null,
+                    child: Container(
+                      height: 140, width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: ext.surface2Color, borderRadius: BorderRadius.circular(12),
+                        image: _imageFile != null ? DecorationImage(image: FileImage(_imageFile!), fit: BoxFit.cover) : null,
+                      ),
+                      child: _imageFile == null
+                          ? Stack(children: [
+                              CustomPaint(painter: _StripePainter(_isLost ? const Color(0x1AF25C54) : const Color(0x1A10B981))),
+                              Center(child: Icon(Icons.image_outlined, size: 42, color: ext.textFaintColor.withAlpha(150))),
+                            ])
+                          : Stack(children: [
+                              Positioned(
+                                top: 8, left: 8,
+                                child: GestureDetector(
+                                  onTap: () => setState(() => _imageFile = null),
+                                  child: Container(
+                                    width: 28, height: 28,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withAlpha(160),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(Icons.close, size: 16, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ]),
                     ),
-                    child: _imageFile == null ? Stack(children: [
-                      CustomPaint(painter: _StripePainter(_isLost ? const Color(0x1AF25C54) : const Color(0x1A10B981))),
-                      Center(child: Icon(Icons.image_outlined, size: 42, color: ext.textFaintColor.withAlpha(150))),
-                    ]) : null,
                   ),
                   const SizedBox(height: 10),
                   Row(children: [
@@ -318,7 +338,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   Icon(Icons.shield_outlined, size: 16, color: ext.primaryColor),
                   const SizedBox(width: 12),
                   Expanded(child: Text(
-                    'Your phone number is shown only after a verified BUITEMS student taps "Contact".',
+                    'Your profile can be viewed when someone taps View on the item detail page.',
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: ext.primaryInkColor, height: 1.5),
                   )),
                 ]),
@@ -364,6 +384,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
         ),
       ]),
     );
+  }
+
+  void _viewImage() {
+    Navigator.push(context, MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (_) => _ImagePreviewScreen(file: _imageFile!),
+    ));
   }
 
   IconData _iconForCat(String cat) {
@@ -452,4 +479,42 @@ class _StripePainter extends CustomPainter {
   }
   @override
   bool shouldRepaint(_StripePainter old) => old.color != color;
+}
+
+class _ImagePreviewScreen extends StatelessWidget {
+  final File file;
+  const _ImagePreviewScreen({required this.file});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(children: [
+        Center(
+          child: InteractiveViewer(
+            child: Image.file(file, fit: BoxFit.contain),
+          ),
+        ),
+        SafeArea(
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 40, height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withAlpha(160),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
 }
