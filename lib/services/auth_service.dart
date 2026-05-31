@@ -56,6 +56,9 @@ class AuthService {
     return _fetchUser(user.uid);
   }
 
+  Future<void> updateUserProfile(String uid, Map<String, dynamic> data) =>
+      _db.collection('users').doc(uid).update(data);
+
   Future<void> sendPasswordReset(String email) =>
       _auth.sendPasswordResetEmail(email: email.trim());
 }

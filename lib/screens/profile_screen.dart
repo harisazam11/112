@@ -5,6 +5,7 @@ import '../providers/auth_provider.dart';
 import '../providers/items_provider.dart';
 import '../providers/theme_provider.dart';
 import '../widgets/avatar_widget.dart';
+import 'edit_profile_screen.dart';
 import 'my_posts_screen.dart';
 import 'notifications_screen.dart';
 import 'preferences_screen.dart';
@@ -60,6 +61,20 @@ class ProfileScreen extends StatelessWidget {
                 width: 140, height: 140,
                 decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withAlpha(26)),
               )),
+              Positioned(
+                top: 0, right: 0,
+                child: GestureDetector(
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const EditProfileScreen())),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(46),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(Icons.edit_outlined, size: 16, color: Colors.white),
+                  ),
+                ),
+              ),
               Row(children: [
                 Container(
                   width: 68, height: 68,

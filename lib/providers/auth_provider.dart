@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
@@ -6,6 +7,7 @@ enum AuthStatus { unknown, authenticated, unauthenticated }
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _service = AuthService();
+  final Completer<void> _initCompleter = Completer<void>();
 
   AuthStatus _status = AuthStatus.unknown;
   UserModel? _user;
@@ -18,6 +20,9 @@ class AuthProvider extends ChangeNotifier {
   bool get loading => _loading;
   bool get isAuthenticated => _status == AuthStatus.authenticated;
 
+  /// Completes once the initial Firebase auth state has been determined.
+  Future<void> get initialized => _initCompleter.future;
+
   AuthProvider() {
     _service.authStateChanges.listen((firebaseUser) async {
       if (firebaseUser == null) {
@@ -27,6 +32,7 @@ class AuthProvider extends ChangeNotifier {
         _user = await _service.getCurrentUserModel();
         _status = AuthStatus.authenticated;
       }
+      if (!_initCompleter.isCompleted) _initCompleter.complete();
       notifyListeners();
     });
   }
@@ -78,6 +84,31 @@ class AuthProvider extends ChangeNotifier {
       return true;
     } catch (_) {
       return false;
+    }
+  }
+
+  Future<bool> updateProfile({
+    required String name,
+    required String phone,
+    required String department,
+    required String semester,
+  }) async {
+    if (_user == null) return false;
+    _loading = true; _error = null; notifyListeners();
+    try {
+      await _service.updateUserProfile(_user!.uid, {
+        'name': name.trim(),
+        'phone': phone.trim(),
+        'department': department,
+        'semester': semester,
+      });
+      _user = await _service.getCurrentUserModel();
+      return true;
+    } catch (e) {
+      _error = _friendlyError(e.toString());
+      return false;
+    } finally {
+      _loading = false; notifyListeners();
     }
   }
 

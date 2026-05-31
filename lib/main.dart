@@ -66,9 +66,13 @@ class _SplashRouterState extends State<_SplashRouter> {
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(const Duration(milliseconds: 2000));
-    if (!mounted) return;
     final auth = context.read<AuthProvider>();
+    // Wait for splash animation AND for Firebase to resolve the auth state.
+    await Future.wait([
+      Future.delayed(const Duration(milliseconds: 2000)),
+      auth.initialized,
+    ]);
+    if (!mounted) return;
     if (auth.isAuthenticated) {
       Navigator.pushReplacementNamed(context, '/home');
     } else {
