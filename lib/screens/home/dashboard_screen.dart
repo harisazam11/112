@@ -10,6 +10,8 @@ import '../item_detail_screen.dart';
 import '../search_screen.dart';
 import '../add_item_screen.dart';
 import '../my_posts_screen.dart';
+import '../profile_screen.dart';
+import '../notifications_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -36,20 +38,28 @@ class DashboardScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(18, 14, 18, 12),
                 child: Row(children: [
-                  AvatarWidget(name: user?.name ?? '', size: 40),
-                  const SizedBox(width: 12),
-                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('Assalam-o-alaikum', style: TextStyle(fontSize: 12, color: ext.textMutedColor, fontWeight: FontWeight.w500)),
-                    const SizedBox(height: 2),
-                    Text('$firstName 👋', style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: ext.textColor)),
-                  ])),
+                  Expanded(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen())),
+                      child: Row(children: [
+                        AvatarWidget(name: user?.name ?? '', size: 40),
+                        const SizedBox(width: 12),
+                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text('Assalam-o-alaikum', style: TextStyle(fontSize: 12, color: ext.textMutedColor, fontWeight: FontWeight.w500)),
+                          const SizedBox(height: 2),
+                          Text('$firstName 👋', style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: ext.textColor)),
+                        ])),
+                      ]),
+                    ),
+                  ),
                   _IconBtn(
                     onTap: () => context.read<ThemeProvider>().toggle(),
                     child: Icon(theme.isDark ? Icons.wb_sunny_outlined : Icons.dark_mode_outlined, size: 18),
                   ),
                   const SizedBox(width: 8),
                   _IconBtn(
-                    onTap: () {},
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
                     badge: true,
                     child: const Icon(Icons.notifications_outlined, size: 18),
                   ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../core/app_theme.dart';
 import '../models/item_model.dart';
 import '../providers/auth_provider.dart';
@@ -9,6 +8,7 @@ import '../providers/items_provider.dart';
 import '../widgets/avatar_widget.dart';
 import '../widgets/status_badge_widget.dart';
 import 'add_item_screen.dart';
+import 'poster_screen.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final ItemModel item;
@@ -45,7 +45,9 @@ class ItemDetailScreen extends StatelessWidget {
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                   _overlayBtn(Icons.arrow_back_ios_new, () => Navigator.pop(context)),
                   Row(children: [
-                    _overlayBtn(Icons.flag_outlined, () {}),
+                    _overlayBtn(Icons.flag_outlined, () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Reporting can be implemented at production level.')),
+                    )),
                     if (isMine) ...[
                       const SizedBox(width: 8),
                       _overlayBtn(Icons.edit_outlined, () => Navigator.push(context,
@@ -54,27 +56,26 @@ class ItemDetailScreen extends StatelessWidget {
                   ]),
                 ]),
               ),
-              // Type badge floating
-              Positioned(bottom: -14, left: 18,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: accent,
-                    borderRadius: BorderRadius.circular(999),
-                    boxShadow: [BoxShadow(color: Colors.black.withAlpha(46), blurRadius: 20, offset: const Offset(0, 8))],
-                  ),
-                  child: Text(
-                    item.isLost ? 'LOST ITEM' : 'FOUND ITEM',
-                    style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 1.2),
-                  ),
-                ),
-              ),
             ]),
           )),
 
           SliverToBoxAdapter(child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              // Type badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: accent,
+                  borderRadius: BorderRadius.circular(999),
+                  boxShadow: [BoxShadow(color: Colors.black.withAlpha(30), blurRadius: 10, offset: const Offset(0, 4))],
+                ),
+                child: Text(
+                  item.isLost ? 'LOST ITEM' : 'FOUND ITEM',
+                  style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700, letterSpacing: 1.2),
+                ),
+              ),
+              const SizedBox(height: 14),
               // Title + status
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(child: Text(item.title, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, letterSpacing: -0.44, color: ext.textColor, height: 1.2))),
@@ -129,7 +130,13 @@ class ItemDetailScreen extends StatelessWidget {
                     Text(item.semester, style: TextStyle(fontSize: 12, color: ext.textMutedColor)),
                   ])),
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(
+                      builder: (_) => PosterScreen(
+                        name: item.postedBy,
+                        uid: item.postedByUid,
+                        semester: item.semester,
+                      ),
+                    )),
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: ext.borderColor),
                       foregroundColor: ext.textColor,
@@ -193,22 +200,25 @@ class ItemDetailScreen extends StatelessWidget {
               Expanded(child: _ActionBtn(
                 label: 'Call', icon: Icons.phone_outlined,
                 iconBg: const Color(0x2310B981), iconColor: const Color(0xFF10B981),
-                onTap: () => _launch('tel:${item.contact}'),
+                onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Call feature can be implemented at production level.')),
+                ),
               )),
               const SizedBox(width: 8),
               Expanded(child: _ActionBtn(
                 label: 'Email', icon: Icons.mail_outlined,
                 iconBg: const Color(0x236E4FF6), iconColor: const Color(0xFF6E4FF6),
-                onTap: () => _launch('mailto:${item.email}'),
+                onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Email feature can be implemented at production level.')),
+                ),
               )),
               const SizedBox(width: 8),
               Expanded(child: _ActionBtn(
                 label: 'WhatsApp', icon: Icons.message_outlined,
                 iconBg: const Color(0x2925D366), iconColor: const Color(0xFF18A04A),
-                onTap: () {
-                  final phone = item.contact.replaceAll(RegExp(r'[^\d]'), '');
-                  _launch('https://wa.me/$phone');
-                },
+                onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('WhatsApp feature can be implemented at production level.')),
+                ),
               )),
             ]),
           ),
@@ -260,10 +270,6 @@ class ItemDetailScreen extends StatelessWidget {
     }
   }
 
-  void _launch(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) await launchUrl(uri);
-  }
 }
 
 class _MetaTile extends StatelessWidget {

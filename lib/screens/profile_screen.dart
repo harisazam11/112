@@ -6,6 +6,9 @@ import '../providers/items_provider.dart';
 import '../providers/theme_provider.dart';
 import '../widgets/avatar_widget.dart';
 import 'my_posts_screen.dart';
+import 'notifications_screen.dart';
+import 'preferences_screen.dart';
+import 'privacy_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -130,9 +133,12 @@ class ProfileScreen extends StatelessWidget {
             child: Column(children: [
               _LinkRow(icon: Icons.label_outline, label: 'My posts', hint: '$totalPosts', ext: ext,
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MyPostsScreen()))),
-              _LinkRow(icon: Icons.notifications_outlined, label: 'Notifications', ext: ext),
-              _LinkRow(icon: Icons.tune_outlined, label: 'Preferences', ext: ext),
-              _LinkRow(icon: Icons.lock_outline, label: 'Privacy & data', last: true, ext: ext),
+              _LinkRow(icon: Icons.notifications_outlined, label: 'Notifications', ext: ext,
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()))),
+              _LinkRow(icon: Icons.tune_outlined, label: 'Preferences', ext: ext,
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PreferencesScreen()))),
+              _LinkRow(icon: Icons.lock_outline, label: 'Privacy & data', last: true, ext: ext,
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PrivacyScreen()))),
             ]),
           ),
           const SizedBox(height: 18),
