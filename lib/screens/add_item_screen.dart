@@ -72,6 +72,10 @@ class _AddItemScreenState extends State<AddItemScreen> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a title')));
       return;
     }
+    if (!_isEdit && _imageFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please add a photo — it helps identify the item')));
+      return;
+    }
     final itemsProvider = context.read<ItemsProvider>();
     final auth = context.read<AuthProvider>();
 
@@ -110,6 +114,11 @@ class _AddItemScreenState extends State<AddItemScreen> {
         backgroundColor: _isLost ? const Color(0xFFF25C54) : const Color(0xFF10B981),
       ));
       Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(itemsProvider.error ?? 'Something went wrong. Please try again.'),
+        backgroundColor: Colors.red.shade700,
+      ));
     }
   }
 

@@ -233,17 +233,26 @@ class ItemDetailScreen extends StatelessWidget {
   }
 
   Widget _heroImage(ItemModel item, AppThemeExtension ext) {
-    if (item.imageUrl != null) {
-      return CachedNetworkImage(imageUrl: item.imageUrl!, fit: BoxFit.cover);
-    }
-    return Container(
+    final accent = item.isLost ? const Color(0x1AF25C54) : const Color(0x1A10B981);
+    final fallback = Container(
       color: ext.surface2Color,
       child: Stack(fit: StackFit.expand, children: [
-        CustomPaint(painter: _StripePainter(
-          item.isLost ? const Color(0x1AF25C54) : const Color(0x1A10B981))),
+        CustomPaint(painter: _StripePainter(accent)),
         Center(child: Icon(_iconForCategory(item.category), size: 68, color: ext.textFaintColor.withAlpha(150))),
       ]),
     );
+    if (item.imageUrl != null) {
+      return CachedNetworkImage(
+        imageUrl: item.imageUrl!,
+        fit: BoxFit.cover,
+        placeholder: (_, __) => Container(
+          color: ext.surface2Color,
+          child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+        ),
+        errorWidget: (_, __, ___) => fallback,
+      );
+    }
+    return fallback;
   }
 
   Widget _overlayBtn(IconData icon, VoidCallback onTap) {

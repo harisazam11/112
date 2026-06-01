@@ -18,7 +18,8 @@
 In your Firebase project:
 - **Authentication** → Sign-in method → Enable **Email/Password**
 - **Firestore Database** → Create database → Start in **test mode** (change rules before production)
-- **Storage** → Get started → Start in **test mode**
+
+Note: Firebase Storage is NOT used. Images are stored on Cloudinary (see setup below).
 
 ### 3. Configure this app
 Install FlutterFire CLI and auto-generate `firebase_options.dart`:
@@ -41,6 +42,36 @@ with the config from Firebase Console → Project Settings → Your apps.
 Download `google-services.json` from Firebase Console →
 Project Settings → Your apps → Android app
 and place it in `android/app/`.
+
+---
+
+## Cloudinary Setup (Image Storage)
+
+Images are uploaded directly from the app to Cloudinary using an unsigned upload preset. No API secret is stored in the app.
+
+### 1. Create a Cloudinary account
+Go to https://cloudinary.com and sign up for a free account.
+
+### 2. Get your cloud name
+In the Cloudinary dashboard, your **Cloud Name** is shown at the top. The app is currently configured to use cloud name `dyijsshbr`.
+
+### 3. Create an unsigned upload preset
+- Go to **Settings** → **Upload** → scroll to **Upload presets**
+- Click **Add upload preset**
+- Set **Signing Mode** to **Unsigned**
+- Give it the name `campus_lost_found`
+- Configure any folder or transformation rules as desired, then save
+
+### 4. How it works
+When a user posts an item, the app sends the selected image to:
+
+```
+POST https://api.cloudinary.com/v1_1/dyijsshbr/image/upload
+```
+
+with `upload_preset=campus_lost_found`. Cloudinary returns a JSON response containing `secure_url`, which the app stores as `imageUrl` in the Firestore item document. All image display throughout the app loads from that HTTPS URL.
+
+To use a different cloud name or preset, update the constants in `lib/services/storage_service.dart`.
 
 ---
 
@@ -98,7 +129,7 @@ lib/
 ├── services/
 │   ├── auth_service.dart         # Firebase Auth wrapper
 │   ├── firestore_service.dart    # Firestore CRUD + streams
-│   └── storage_service.dart      # Firebase Storage upload/delete
+│   └── storage_service.dart      # Cloudinary image upload (unsigned preset)
 ├── providers/
 │   ├── auth_provider.dart        # Auth state (ChangeNotifier)
 │   ├── items_provider.dart       # Items state + search
