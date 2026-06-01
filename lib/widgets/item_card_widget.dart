@@ -69,6 +69,8 @@ class ItemCardWidget extends StatelessWidget {
                     style: TextStyle(fontSize: 11.5, color: ext.textMutedColor),
                   ),
                 ),
+                const SizedBox(width: 5),
+                StatusBadge(status: item.status),
               ]),
             ]),
           ),
