@@ -73,7 +73,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
       return;
     }
     if (!_isEdit && _imageFile == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please add a photo — it helps identify the item')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please add a photo. It helps identify the item.')));
       return;
     }
     final itemsProvider = context.read<ItemsProvider>();

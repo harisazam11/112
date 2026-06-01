@@ -62,7 +62,7 @@ class ItemDetailScreen extends StatelessWidget {
                   _overlayBtn(Icons.arrow_back_ios_new, () => Navigator.pop(context)),
                   Row(children: [
                     _overlayBtn(Icons.flag_outlined, () => ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Reporting can be implemented at production level.')),
+                      const SnackBar(content: Text('Reporting is not available yet.')),
                     )),
                     if (isMine) ...[
                       const SizedBox(width: 8),
@@ -217,7 +217,7 @@ class ItemDetailScreen extends StatelessWidget {
                 label: 'Call', icon: Icons.phone_outlined,
                 iconBg: const Color(0x2310B981), iconColor: const Color(0xFF10B981),
                 onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Call feature can be implemented at production level.')),
+                  const SnackBar(content: Text('Call is not available yet.')),
                 ),
               )),
               const SizedBox(width: 8),
@@ -225,7 +225,7 @@ class ItemDetailScreen extends StatelessWidget {
                 label: 'Email', icon: Icons.mail_outlined,
                 iconBg: const Color(0x236E4FF6), iconColor: const Color(0xFF6E4FF6),
                 onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Email feature can be implemented at production level.')),
+                  const SnackBar(content: Text('Email is not available yet.')),
                 ),
               )),
               const SizedBox(width: 8),
@@ -233,7 +233,7 @@ class ItemDetailScreen extends StatelessWidget {
                 label: 'WhatsApp', icon: Icons.message_outlined,
                 iconBg: const Color(0x2925D366), iconColor: const Color(0xFF18A04A),
                 onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('WhatsApp feature can be implemented at production level.')),
+                  const SnackBar(content: Text('WhatsApp is not available yet.')),
                 ),
               )),
             ]),

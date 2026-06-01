@@ -37,7 +37,7 @@ class NotificationsScreen extends StatelessWidget {
                 SizedBox(
                   width: 260,
                   child: Text(
-                    "You're all caught up. Notifications will show here when activity happens on your posts.",
+                    "Nothing here yet. You'll see updates when there's activity on your posts.",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14, color: ext.textMutedColor, height: 1.5),
                   ),

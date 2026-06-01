@@ -134,7 +134,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const SizedBox(height: 6),
               GestureDetector(
                 onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Email cannot be changed in this version.')),
+                  const SnackBar(content: Text('Email cannot be changed.')),
                 ),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
@@ -203,7 +203,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               // Change password row
               GestureDetector(
                 onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Changing password can be implemented at production level.')),
+                  const SnackBar(content: Text('Password changes are not available yet.')),
                 ),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),

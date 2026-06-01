@@ -249,7 +249,7 @@ class _EmptyState extends StatelessWidget {
       const SizedBox(height: 16),
       Text("You haven't posted yet", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: ext.textColor)),
       const SizedBox(height: 8),
-      Text('Lost something or found one? Post it from the home tab.',
+      Text('Lost something or found something? Post it from the home tab.',
         textAlign: TextAlign.center, style: TextStyle(fontSize: 13.5, color: ext.textMutedColor)),
     ])),
   );

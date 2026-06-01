@@ -80,7 +80,7 @@ class PreferencesScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Text(
-                  'Notification settings will be active in a future update.',
+                  "These settings aren't connected yet.",
                   style: TextStyle(fontSize: 12, color: ext.textFaintColor),
                 ),
               ),

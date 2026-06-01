@@ -43,7 +43,7 @@ class _AdminScreenState extends State<AdminScreen> {
               child: Row(children: [
                 Icon(Icons.shield_outlined, size: 16, color: ext.warnColor),
                 const SizedBox(width: 10),
-                Expanded(child: Text('Moderator preview — actions are sample, not destructive.',
+                Expanded(child: Text('Moderator view. Actions here are for preview only.',
                   style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: ext.warnColor))),
               ]),
             ),

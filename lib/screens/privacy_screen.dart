@@ -28,7 +28,7 @@ class PrivacyScreen extends StatelessWidget {
               _InfoCard(
                 icon: Icons.storage_outlined,
                 title: 'What we store',
-                body: 'Your name, university email, department, semester, and phone number — provided during signup. Posts you create are stored in Firestore under your account.',
+                body: 'Your name, university email, department, semester, and phone number from signup. Posts you create are stored in Firestore under your account.',
                 ext: ext,
               ),
               const SizedBox(height: 14),

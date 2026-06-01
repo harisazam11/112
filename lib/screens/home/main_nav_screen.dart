@@ -166,7 +166,7 @@ class _AddChoiceSheet extends StatelessWidget {
         Container(width: 36, height: 4, margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(color: ext.borderStrongColor, borderRadius: BorderRadius.circular(99)),
         ),
-        Text('What did you want to post?',
+        Text('What do you want to post?',
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: ext.textColor),
         ),
         const SizedBox(height: 6),
