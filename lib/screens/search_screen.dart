@@ -15,7 +15,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final _queryCtrl = TextEditingController();
   String _type = 'all';
-  final Set<String> _cats = {};
+  String? _cat;
   String? _loc;
   String? _status;
 
@@ -23,10 +23,10 @@ class _SearchScreenState extends State<SearchScreen> {
   void dispose() { _queryCtrl.dispose(); super.dispose(); }
 
   int get _activeFilters =>
-      (_type != 'all' ? 1 : 0) + _cats.length + (_loc != null ? 1 : 0) + (_status != null ? 1 : 0);
+      (_type != 'all' ? 1 : 0) + (_cat != null ? 1 : 0) + (_loc != null ? 1 : 0) + (_status != null ? 1 : 0);
 
   void _clear() => setState(() {
-    _queryCtrl.clear(); _type = 'all'; _cats.clear(); _loc = null; _status = null;
+    _queryCtrl.clear(); _type = 'all'; _cat = null; _loc = null; _status = null;
   });
 
   @override
@@ -36,7 +36,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final results = items.search(
       query: _queryCtrl.text,
       type: _type,
-      categories: _cats.toList(),
+      categories: _cat != null ? [_cat!] : [],
       location: _loc,
       status: _status,
     );
@@ -106,8 +106,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 _sectionLabel('CATEGORY', ext),
                 const SizedBox(height: 8),
                 Wrap(spacing: 6, runSpacing: 6, children: AppConstants.categories.map((c) =>
-                  _FilterChip(label: c['label']!, active: _cats.contains(c['key']),
-                    onTap: () => setState(() => _cats.contains(c['key']!) ? _cats.remove(c['key']!) : _cats.add(c['key']!)),
+                  _FilterChip(label: c['label']!, active: _cat == c['key'],
+                    onTap: () => setState(() => _cat = _cat == c['key'] ? null : c['key']),
                   )
                 ).toList()),
                 const SizedBox(height: 14),

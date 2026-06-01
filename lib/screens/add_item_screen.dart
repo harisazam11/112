@@ -27,7 +27,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
   final _phoneCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
 
-  String _category = 'wal';
+  String _category = 'oth';
   String _location = 'CS Department';
   String _date = 'Today';
   File? _imageFile;
