@@ -39,12 +39,23 @@ class ItemDetailScreen extends StatelessWidget {
           SliverToBoxAdapter(child: SizedBox(
             height: 280,
             child: Stack(fit: StackFit.expand, children: [
-              _heroImage(item, ext),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: item.imageUrl != null
+                    ? () => Navigator.push(context, MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (_) => _NetworkImagePreviewScreen(url: item.imageUrl!),
+                        ))
+                    : null,
+                child: _heroImage(item, ext),
+              ),
               // Gradient overlay
-              DecoratedBox(decoration: BoxDecoration(
-                gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
-                  colors: [Colors.black.withAlpha(51), Colors.transparent]),
-              )),
+              IgnorePointer(
+                child: DecoratedBox(decoration: BoxDecoration(
+                  gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
+                    colors: [Colors.black.withAlpha(51), Colors.transparent]),
+                )),
+              ),
               // Back / flag / edit buttons
               Positioned(top: 16 + MediaQuery.of(context).padding.top, left: 16, right: 16,
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -375,4 +386,51 @@ class _StripePainter extends CustomPainter {
   }
   @override
   bool shouldRepaint(_StripePainter old) => old.color != color;
+}
+
+class _NetworkImagePreviewScreen extends StatelessWidget {
+  final String url;
+  const _NetworkImagePreviewScreen({required this.url});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(children: [
+        Center(
+          child: InteractiveViewer(
+            child: CachedNetworkImage(
+              imageUrl: url,
+              fit: BoxFit.contain,
+              placeholder: (_, __) => const Center(
+                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+              ),
+              errorWidget: (_, __, ___) => const Center(
+                child: Icon(Icons.broken_image_outlined, color: Colors.white54, size: 64),
+              ),
+            ),
+          ),
+        ),
+        SafeArea(
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 40, height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withAlpha(160),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
 }
