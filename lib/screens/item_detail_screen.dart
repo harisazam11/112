@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../core/app_theme.dart';
@@ -98,9 +99,24 @@ class ItemDetailScreen extends StatelessWidget {
                 const SizedBox(width: 12),
                 StatusBadge(status: liveItem.status),
               ]),
-              const SizedBox(height: 6),
-              Text('Posted ${item.date.toLowerCase()} · ${item.categoryLabel}',
-                style: TextStyle(fontSize: 13.5, color: ext.textMutedColor)),
+              const SizedBox(height: 14),
+              Row(children: [
+                Expanded(child: _InfoCol(
+                  label: 'POSTED',
+                  value: DateFormat('d MMM y').format(item.createdAt),
+                  ext: ext,
+                )),
+                Expanded(child: _InfoCol(
+                  label: item.isLost ? 'DATE LOST' : 'DATE FOUND',
+                  value: item.date,
+                  ext: ext,
+                )),
+                Expanded(child: _InfoCol(
+                  label: 'CATEGORY',
+                  value: item.categoryLabel,
+                  ext: ext,
+                )),
+              ]),
               const SizedBox(height: 18),
 
               // Meta tiles
@@ -386,6 +402,25 @@ class _StripePainter extends CustomPainter {
   }
   @override
   bool shouldRepaint(_StripePainter old) => old.color != color;
+}
+
+class _InfoCol extends StatelessWidget {
+  final String label, value;
+  final AppThemeExtension ext;
+  const _InfoCol({required this.label, required this.value, required this.ext});
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(label, style: TextStyle(
+        fontSize: 10, fontWeight: FontWeight.w600,
+        letterSpacing: 0.6, color: ext.textMutedColor)),
+      const SizedBox(height: 3),
+      Text(value, maxLines: 2, overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: ext.textColor)),
+    ],
+  );
 }
 
 class _NetworkImagePreviewScreen extends StatelessWidget {
