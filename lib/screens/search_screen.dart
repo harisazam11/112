@@ -18,6 +18,8 @@ class _SearchScreenState extends State<SearchScreen> {
   String? _cat;
   String? _loc;
   String? _status;
+  bool _showAllCats = false;
+  bool _showAllLocs = false;
 
   @override
   void dispose() { _queryCtrl.dispose(); super.dispose(); }
@@ -105,23 +107,13 @@ class _SearchScreenState extends State<SearchScreen> {
                 // Categories
                 _sectionLabel('CATEGORY', ext),
                 const SizedBox(height: 8),
-                Wrap(spacing: 6, runSpacing: 6, children: AppConstants.categories.map((c) =>
-                  _FilterChip(label: c['label']!, active: _cat == c['key'],
-                    onTap: () => setState(() => _cat = _cat == c['key'] ? null : c['key']),
-                  )
-                ).toList()),
+                _categoryFilter(ext),
                 const SizedBox(height: 14),
 
                 // Locations
                 _sectionLabel('LOCATION', ext),
                 const SizedBox(height: 8),
-                Wrap(spacing: 6, runSpacing: 6, children: AppConstants.locations.take(8).map((l) =>
-                  _FilterChip(
-                    label: l, active: _loc == l,
-                    onTap: () => setState(() => _loc = _loc == l ? null : l),
-                    icon: Icons.location_on_outlined,
-                  )
-                ).toList()),
+                _locationFilter(ext),
                 const SizedBox(height: 14),
 
                 // Status
@@ -178,6 +170,43 @@ class _SearchScreenState extends State<SearchScreen> {
         ]),
       ),
     );
+  }
+
+  Widget _categoryFilter(AppThemeExtension ext) {
+    const cats = AppConstants.categories;
+    final displayed = _showAllCats ? cats : cats.take(4).toList();
+    return Wrap(spacing: 6, runSpacing: 6, children: [
+      ...displayed.map((c) => _FilterChip(
+        label: c['label']!,
+        active: _cat == c['key'],
+        onTap: () => setState(() => _cat = _cat == c['key'] ? null : c['key']),
+      )),
+      if (cats.length > 4)
+        _ToggleChip(
+          label: _showAllCats ? 'Show less' : 'Show more',
+          expanded: _showAllCats,
+          onTap: () => setState(() => _showAllCats = !_showAllCats),
+        ),
+    ]);
+  }
+
+  Widget _locationFilter(AppThemeExtension ext) {
+    const locs = AppConstants.locations;
+    final displayed = _showAllLocs ? locs : locs.take(4).toList();
+    return Wrap(spacing: 6, runSpacing: 6, children: [
+      ...displayed.map((l) => _FilterChip(
+        label: l,
+        active: _loc == l,
+        onTap: () => setState(() => _loc = _loc == l ? null : l),
+        icon: Icons.location_on_outlined,
+      )),
+      if (locs.length > 4)
+        _ToggleChip(
+          label: _showAllLocs ? 'Show less' : 'Show more',
+          expanded: _showAllLocs,
+          onTap: () => setState(() => _showAllLocs = !_showAllLocs),
+        ),
+    ]);
   }
 
   Widget _segmentedControl(AppThemeExtension ext) {
@@ -253,6 +282,34 @@ class _FilterChip extends StatelessWidget {
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           if (icon != null) ...[Icon(icon, size: 12, color: active ? ext.bgColor : ext.textMutedColor), const SizedBox(width: 4)],
           Text(label, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500, color: active ? ext.bgColor : ext.textColor)),
+        ]),
+      ),
+    );
+  }
+}
+
+class _ToggleChip extends StatelessWidget {
+  final String label;
+  final bool expanded;
+  final VoidCallback onTap;
+  const _ToggleChip({required this.label, required this.expanded, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final ext = context.ext;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          border: Border.all(color: ext.borderStrongColor),
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(expanded ? Icons.expand_less : Icons.expand_more, size: 14, color: ext.textMutedColor),
+          const SizedBox(width: 4),
+          Text(label, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: ext.textMutedColor)),
         ]),
       ),
     );

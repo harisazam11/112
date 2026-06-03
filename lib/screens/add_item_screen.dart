@@ -28,7 +28,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
   final _emailCtrl = TextEditingController();
 
   String _category = 'oth';
-  String _location = 'CS Department';
+  String _location = 'Block A';
   String _date = 'Today';
   File? _imageFile;
 
@@ -183,7 +183,10 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: ext.surfaceColor, borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: ext.borderStrongColor, width: 1.5, style: BorderStyle.solid),
+                  border: Border.all(
+                  color: _imageFile != null ? ext.primaryColor : ext.borderStrongColor,
+                  width: _imageFile != null ? 2.0 : 1.5,
+                ),
                 ),
                 child: Column(children: [
                   GestureDetector(
@@ -236,24 +239,32 @@ class _AddItemScreenState extends State<AddItemScreen> {
               _FieldLabel('Item title', ext), const SizedBox(height: 6),
               TextFormField(
                 controller: _titleCtrl,
+                onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
                   hintText: _isLost ? 'e.g. Black wallet with leather strap' : 'e.g. SanDisk USB drive, red',
                   fillColor: ext.surfaceColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: _titleCtrl.text.trim().isNotEmpty ? ext.primaryColor : ext.borderStrongColor,
+                      width: _titleCtrl.text.trim().isNotEmpty ? 2.0 : 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: _titleCtrl.text.trim().isNotEmpty ? ext.primaryColor : ext.borderStrongColor,
+                      width: _titleCtrl.text.trim().isNotEmpty ? 2.0 : 1.0,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 14),
 
               _FieldLabel('Category', ext), const SizedBox(height: 6),
-              _DropdownField(
+              _CategoryPickerField(
                 value: _category,
-                items: AppConstants.categories.map((c) =>
-                  DropdownMenuItem(value: c['key']!, child: Row(children: [
-                    Icon(_iconForCat(c['key']!), size: 16, color: ext.textMutedColor),
-                    const SizedBox(width: 8),
-                    Text(c['label']!),
-                  ]))
-                ).toList(),
-                onChanged: (v) => setState(() => _category = v ?? _category),
+                onPick: (v) => setState(() => _category = v),
                 ext: ext,
               ),
               const SizedBox(height: 14),
@@ -262,11 +273,26 @@ class _AddItemScreenState extends State<AddItemScreen> {
               TextFormField(
                 controller: _descCtrl,
                 maxLines: 4,
+                onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
                   hintText: _isLost
                       ? 'Color, brand, distinguishing marks, what was inside…'
                       : 'Where exactly you found it, condition, any markings…',
                   fillColor: ext.surfaceColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: _descCtrl.text.trim().isNotEmpty ? ext.primaryColor : ext.borderStrongColor,
+                      width: _descCtrl.text.trim().isNotEmpty ? 2.0 : 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: _descCtrl.text.trim().isNotEmpty ? ext.primaryColor : ext.borderStrongColor,
+                      width: _descCtrl.text.trim().isNotEmpty ? 2.0 : 1.0,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 14),
@@ -274,22 +300,18 @@ class _AddItemScreenState extends State<AddItemScreen> {
               Row(children: [
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   _FieldLabel(_isLost ? 'Location lost' : 'Location found', ext), const SizedBox(height: 6),
-                  _DropdownField(
+                  _LocationPickerField(
                     value: _location,
-                    items: AppConstants.locations.map((l) =>
-                      DropdownMenuItem(value: l, child: Text(l, overflow: TextOverflow.ellipsis))).toList(),
-                    onChanged: (v) => setState(() => _location = v ?? _location),
+                    onPick: (v) => setState(() => _location = v),
                     ext: ext,
                   ),
                 ])),
                 const SizedBox(width: 10),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   _FieldLabel(_isLost ? 'Date lost' : 'Date found', ext), const SizedBox(height: 6),
-                  _DropdownField(
+                  _DatePickerField(
                     value: _date,
-                    items: AppConstants.dateOptions.map((d) =>
-                      DropdownMenuItem(value: d, child: Text(d))).toList(),
-                    onChanged: (v) => setState(() => _date = v ?? _date),
+                    onPick: (v) => setState(() => _date = v),
                     ext: ext,
                   ),
                 ])),
@@ -304,6 +326,10 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   decoration: InputDecoration(
                     hintText: 'Where will the owner meet you? Any verification needed?',
                     fillColor: ext.surfaceColor,
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: ext.primaryColor, width: 2),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -315,10 +341,25 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   TextFormField(
                     controller: _phoneCtrl,
                     keyboardType: TextInputType.phone,
+                    onChanged: (_) => setState(() {}),
                     decoration: InputDecoration(
                       hintText: '+92 3xx xxxxxxx',
                       prefixIcon: const Icon(Icons.phone_outlined, size: 18),
                       fillColor: ext.surfaceColor,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: _phoneCtrl.text.trim().isNotEmpty ? ext.primaryColor : ext.borderStrongColor,
+                          width: _phoneCtrl.text.trim().isNotEmpty ? 2.0 : 1.0,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: _phoneCtrl.text.trim().isNotEmpty ? ext.primaryColor : ext.borderStrongColor,
+                          width: _phoneCtrl.text.trim().isNotEmpty ? 2.0 : 1.0,
+                        ),
+                      ),
                     ),
                   ),
                 ])),
@@ -328,10 +369,25 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   TextFormField(
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
+                    onChanged: (_) => setState(() {}),
                     decoration: InputDecoration(
                       hintText: 'name@buitms.edu.pk',
                       prefixIcon: const Icon(Icons.mail_outline, size: 18),
                       fillColor: ext.surfaceColor,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: _emailCtrl.text.trim().isNotEmpty ? ext.primaryColor : ext.borderStrongColor,
+                          width: _emailCtrl.text.trim().isNotEmpty ? 2.0 : 1.0,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: _emailCtrl.text.trim().isNotEmpty ? ext.primaryColor : ext.borderStrongColor,
+                          width: _emailCtrl.text.trim().isNotEmpty ? 2.0 : 1.0,
+                        ),
+                      ),
                     ),
                   ),
                 ])),
@@ -402,21 +458,6 @@ class _AddItemScreenState extends State<AddItemScreen> {
     ));
   }
 
-  IconData _iconForCat(String cat) {
-    switch (cat) {
-      case 'id': return Icons.credit_card;
-      case 'wal': return Icons.account_balance_wallet_outlined;
-      case 'key': return Icons.key_outlined;
-      case 'book': return Icons.menu_book_outlined;
-      case 'elec': return Icons.devices_outlined;
-      case 'calc': return Icons.calculate_outlined;
-      case 'usb': return Icons.usb_outlined;
-      case 'bag': return Icons.backpack_outlined;
-      case 'sta': return Icons.edit_outlined;
-      case 'clo': return Icons.checkroom_outlined;
-      default: return Icons.label_outlined;
-    }
-  }
 }
 
 class _FieldLabel extends StatelessWidget {
@@ -451,28 +492,329 @@ class _SecondaryBtn extends StatelessWidget {
   );
 }
 
-class _DropdownField<T> extends StatelessWidget {
-  final T value;
-  final List<DropdownMenuItem<T>> items;
-  final ValueChanged<T?> onChanged;
+class _CategoryPickerField extends StatefulWidget {
+  final String value;
+  final ValueChanged<String> onPick;
   final AppThemeExtension ext;
-  const _DropdownField({required this.value, required this.items, required this.onChanged, required this.ext});
+  const _CategoryPickerField({required this.value, required this.onPick, required this.ext});
 
   @override
-  Widget build(BuildContext context) => DropdownButtonFormField<T>(
-    value: value, items: items, onChanged: onChanged,
-    isExpanded: true,
-    decoration: InputDecoration(
-      filled: true, fillColor: ext.surfaceColor,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: ext.borderStrongColor)),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: ext.borderStrongColor)),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: ext.primaryColor, width: 2)),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-    ),
-    dropdownColor: ext.surfaceColor,
-    borderRadius: BorderRadius.circular(12),
-    style: TextStyle(fontSize: 15, color: ext.textColor),
-  );
+  State<_CategoryPickerField> createState() => _CategoryPickerFieldState();
+}
+
+class _CategoryPickerFieldState extends State<_CategoryPickerField> {
+  bool _focused = false;
+
+  static IconData _icon(String key) {
+    switch (key) {
+      case 'id':   return Icons.credit_card;
+      case 'wal':  return Icons.account_balance_wallet_outlined;
+      case 'key':  return Icons.key_outlined;
+      case 'book': return Icons.menu_book_outlined;
+      case 'elec': return Icons.devices_outlined;
+      case 'calc': return Icons.calculate_outlined;
+      case 'usb':  return Icons.usb_outlined;
+      case 'bag':  return Icons.backpack_outlined;
+      case 'sta':  return Icons.edit_outlined;
+      case 'clo':  return Icons.checkroom_outlined;
+      default:     return Icons.label_outlined;
+    }
+  }
+
+  void _open(BuildContext context) {
+    setState(() => _focused = true);
+    bool showAll = false;
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setSS) {
+          const cats = AppConstants.categories;
+          final displayed = showAll ? cats : cats.take(4).toList();
+          return Container(
+            decoration: BoxDecoration(
+              color: widget.ext.surfaceColor,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 12, bottom: 6),
+                    width: 36, height: 4,
+                    decoration: BoxDecoration(color: widget.ext.borderColor, borderRadius: BorderRadius.circular(999)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(18, 6, 18, 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Select category',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: widget.ext.textColor)),
+                    ),
+                  ),
+                  Divider(height: 1, color: widget.ext.borderColor),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.55),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ...displayed.map((c) => ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+                            leading: Icon(_icon(c['key']!), size: 18, color: widget.ext.textMutedColor),
+                            title: Text(c['label']!, style: TextStyle(fontSize: 15, color: widget.ext.textColor)),
+                            trailing: widget.value == c['key'] ? Icon(Icons.check_rounded, color: widget.ext.textColor, size: 18) : null,
+                            onTap: () { widget.onPick(c['key']!); Navigator.pop(ctx); },
+                          )),
+                          if (cats.length > 4)
+                            ListTile(
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+                              leading: Icon(showAll ? Icons.expand_less : Icons.expand_more, color: widget.ext.textMutedColor, size: 20),
+                              title: Text(showAll ? 'Show less' : 'Show more',
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: widget.ext.textMutedColor)),
+                              onTap: () => setSS(() => showAll = !showAll),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    ).then((_) { if (mounted) setState(() => _focused = false); });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cat = AppConstants.categories.firstWhere(
+      (c) => c['key'] == widget.value,
+      orElse: () => {'key': 'oth', 'label': 'Other'},
+    );
+    return GestureDetector(
+      onTap: () => _open(context),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        decoration: BoxDecoration(
+          color: widget.ext.surfaceColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: _focused ? widget.ext.primaryColor : widget.ext.borderStrongColor,
+            width: _focused ? 2.0 : 1.0,
+          ),
+        ),
+        child: Row(children: [
+          Icon(_icon(widget.value), size: 16, color: widget.ext.textMutedColor),
+          const SizedBox(width: 8),
+          Expanded(child: Text(cat['label']!,
+            style: TextStyle(fontSize: 15, color: widget.ext.textColor),
+            overflow: TextOverflow.ellipsis)),
+          Icon(Icons.arrow_drop_down, color: widget.ext.textMutedColor),
+        ]),
+      ),
+    );
+  }
+}
+
+class _DatePickerField extends StatefulWidget {
+  final String value;
+  final ValueChanged<String> onPick;
+  final AppThemeExtension ext;
+  const _DatePickerField({required this.value, required this.onPick, required this.ext});
+
+  @override
+  State<_DatePickerField> createState() => _DatePickerFieldState();
+}
+
+class _DatePickerFieldState extends State<_DatePickerField> {
+  bool _focused = false;
+
+  void _open(BuildContext context) {
+    setState(() => _focused = true);
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        const dates = AppConstants.dateOptions;
+        return Container(
+          decoration: BoxDecoration(
+            color: widget.ext.surfaceColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 12, bottom: 6),
+                  width: 36, height: 4,
+                  decoration: BoxDecoration(color: widget.ext.borderColor, borderRadius: BorderRadius.circular(999)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 6, 18, 10),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('When was it?',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: widget.ext.textColor)),
+                  ),
+                ),
+                Divider(height: 1, color: widget.ext.borderColor),
+                ...dates.map((d) => ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+                  title: Text(d, style: TextStyle(fontSize: 15, color: widget.ext.textColor)),
+                  trailing: widget.value == d ? Icon(Icons.check_rounded, color: widget.ext.textColor, size: 18) : null,
+                  onTap: () { widget.onPick(d); Navigator.pop(ctx); },
+                )),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((_) { if (mounted) setState(() => _focused = false); });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _open(context),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        decoration: BoxDecoration(
+          color: widget.ext.surfaceColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: _focused ? widget.ext.primaryColor : widget.ext.borderStrongColor,
+            width: _focused ? 2.0 : 1.0,
+          ),
+        ),
+        child: Row(children: [
+          Expanded(child: Text(widget.value,
+            style: TextStyle(fontSize: 15, color: widget.ext.textColor),
+            overflow: TextOverflow.ellipsis)),
+          Icon(Icons.arrow_drop_down, color: widget.ext.textMutedColor),
+        ]),
+      ),
+    );
+  }
+}
+
+class _LocationPickerField extends StatefulWidget {
+  final String value;
+  final ValueChanged<String> onPick;
+  final AppThemeExtension ext;
+  const _LocationPickerField({required this.value, required this.onPick, required this.ext});
+
+  @override
+  State<_LocationPickerField> createState() => _LocationPickerFieldState();
+}
+
+class _LocationPickerFieldState extends State<_LocationPickerField> {
+  bool _focused = false;
+
+  void _open(BuildContext context) {
+    setState(() => _focused = true);
+    bool showAll = false;
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setSS) {
+          const locs = AppConstants.locations;
+          final displayed = showAll ? locs : locs.take(4).toList();
+          return Container(
+            decoration: BoxDecoration(
+              color: widget.ext.surfaceColor,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 12, bottom: 6),
+                    width: 36, height: 4,
+                    decoration: BoxDecoration(color: widget.ext.borderColor, borderRadius: BorderRadius.circular(999)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(18, 6, 18, 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Select location',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: widget.ext.textColor)),
+                    ),
+                  ),
+                  Divider(height: 1, color: widget.ext.borderColor),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.55),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ...displayed.map((l) => ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+                            title: Text(l, style: TextStyle(fontSize: 15, color: widget.ext.textColor)),
+                            trailing: widget.value == l ? Icon(Icons.check_rounded, color: widget.ext.textColor, size: 18) : null,
+                            onTap: () { widget.onPick(l); Navigator.pop(ctx); },
+                          )),
+                          if (locs.length > 4)
+                            ListTile(
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+                              leading: Icon(showAll ? Icons.expand_less : Icons.expand_more, color: widget.ext.textMutedColor, size: 20),
+                              title: Text(showAll ? 'Show less' : 'Show more',
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: widget.ext.textMutedColor)),
+                              onTap: () => setSS(() => showAll = !showAll),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    ).then((_) { if (mounted) setState(() => _focused = false); });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _open(context),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        decoration: BoxDecoration(
+          color: widget.ext.surfaceColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: _focused ? widget.ext.primaryColor : widget.ext.borderStrongColor,
+            width: _focused ? 2.0 : 1.0,
+          ),
+        ),
+        child: Row(children: [
+          Expanded(child: Text(widget.value,
+            style: TextStyle(fontSize: 15, color: widget.ext.textColor),
+            overflow: TextOverflow.ellipsis)),
+          Icon(Icons.arrow_drop_down, color: widget.ext.textMutedColor),
+        ]),
+      ),
+    );
+  }
 }
 
 class _StripePainter extends CustomPainter {
