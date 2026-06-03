@@ -31,11 +31,6 @@ class MyPostsScreen extends StatelessWidget {
               IconButton(icon: const Icon(Icons.arrow_back_ios_new, size: 20), onPressed: () => Navigator.pop(context)),
               Text('My posts', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: ext.textColor)),
               const Spacer(),
-              Container(
-                width: 40, height: 40,
-                decoration: BoxDecoration(color: Colors.transparent, shape: BoxShape.circle),
-                child: Icon(Icons.tune_outlined, size: 20, color: ext.textMutedColor),
-              ),
             ]),
           ),
           const SizedBox(height: 4),
