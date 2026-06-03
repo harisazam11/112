@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/app_theme.dart';
@@ -5,7 +6,7 @@ import '../providers/items_provider.dart';
 import '../widgets/item_card_widget.dart';
 import 'item_detail_screen.dart';
 
-class PosterScreen extends StatelessWidget {
+class PosterScreen extends StatefulWidget {
   final String name;
   final String uid;
   final String semester;
@@ -17,8 +18,35 @@ class PosterScreen extends StatelessWidget {
     required this.semester,
   });
 
+  @override
+  State<PosterScreen> createState() => _PosterScreenState();
+}
+
+class _PosterScreenState extends State<PosterScreen> {
+  late final Future<Map<String, String>> _profileFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileFuture = _fetchProfile();
+  }
+
+  Future<Map<String, String>> _fetchProfile() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uid)
+        .get();
+    if (!doc.exists) return {'phone': '—', 'email': '—', 'department': '—'};
+    final d = doc.data() as Map<String, dynamic>;
+    String v(String key) {
+      final s = (d[key] as String?)?.trim() ?? '';
+      return s.isNotEmpty ? s : '—';
+    }
+    return {'phone': v('phone'), 'email': v('email'), 'department': v('department')};
+  }
+
   String get _initials {
-    final parts = name.trim().split(' ');
+    final parts = widget.name.trim().split(' ');
     if (parts.length >= 2) return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
     if (parts.isNotEmpty && parts[0].isNotEmpty) return parts[0][0].toUpperCase();
     return '?';
@@ -28,7 +56,7 @@ class PosterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ext = context.ext;
     final items = context.watch<ItemsProvider>();
-    final posts = items.myItems(uid);
+    final posts = items.myItems(widget.uid);
 
     return Scaffold(
       backgroundColor: ext.bgColor,
@@ -60,44 +88,76 @@ class PosterScreen extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Stack(children: [
-                Positioned(top: -30, right: -30, child: Container(
-                  width: 120, height: 120,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withAlpha(26)),
-                )),
-                Row(children: [
-                  Container(
-                    width: 60, height: 60,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withAlpha(51),
-                      border: Border.all(color: Colors.white.withAlpha(102), width: 2),
-                    ),
-                    child: Center(child: Text(
-                      _initials,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
+              child: FutureBuilder<Map<String, String>>(
+                future: _profileFuture,
+                builder: (context, snapshot) {
+                  final info = snapshot.data;
+                  final phone = info?['phone'] ?? '…';
+                  final email = info?['email'] ?? '…';
+                  final department = info?['department'] ?? '…';
+                  final sem = widget.semester.isNotEmpty ? widget.semester : '—';
+
+                  return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    // Avatar + STUDENT badge stacked below it
+                    Column(mainAxisSize: MainAxisSize.min, children: [
+                      Container(
+                        width: 60, height: 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withAlpha(51),
+                          border: Border.all(color: Colors.white.withAlpha(102), width: 2),
+                        ),
+                        child: Center(child: Text(
+                          _initials,
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
+                        )),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withAlpha(46),
+                          borderRadius: BorderRadius.circular(99),
+                        ),
+                        child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                          Icon(Icons.school_outlined, size: 10, color: Colors.white),
+                          SizedBox(width: 4),
+                          Text('STUDENT',
+                            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: Colors.white)),
+                        ]),
+                      ),
+                    ]),
+                    const SizedBox(width: 16),
+
+                    // Info fields
+                    Expanded(child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          widget.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w700,
+                            color: Colors.white, letterSpacing: -0.2,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Expanded(child: _InfoCell(label: 'Phone', value: phone)),
+                          const SizedBox(width: 12),
+                          Expanded(child: _InfoCell(label: 'Semester', value: sem)),
+                        ]),
+                        const SizedBox(height: 8),
+                        _InfoCell(label: 'Email', value: email, wrap: true),
+                        const SizedBox(height: 8),
+                        _InfoCell(label: 'Department', value: department, wrap: true),
+                      ],
                     )),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(name, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white)),
-                    const SizedBox(height: 3),
-                    Text(semester, style: const TextStyle(fontSize: 12.5, color: Color(0xD9FFFFFF))),
-                    const SizedBox(height: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withAlpha(46), borderRadius: BorderRadius.circular(99)),
-                      child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                        Icon(Icons.school_outlined, size: 10, color: Colors.white),
-                        SizedBox(width: 4),
-                        Text('STUDENT',
-                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.8, color: Colors.white)),
-                      ]),
-                    ),
-                  ])),
-                ]),
-              ]),
+                  ]);
+                },
+              ),
             ),
           ),
           const SizedBox(height: 18),
@@ -146,4 +206,36 @@ class PosterScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class _InfoCell extends StatelessWidget {
+  final String? label;
+  final String value;
+  final bool wrap;
+  const _InfoCell({this.label, required this.value, this.wrap = false});
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      if (label != null) ...[
+        Text(label!,
+          style: const TextStyle(
+            fontSize: 9.5, color: Color(0xB3FFFFFF),
+            fontWeight: FontWeight.w500, letterSpacing: 0.3)),
+        const SizedBox(height: 1),
+      ],
+      Text(
+        value,
+        maxLines: wrap ? 2 : 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(
+          fontSize: 12.5,
+          fontWeight: FontWeight.w500,
+          color: Color(0xD9FFFFFF),
+        ),
+      ),
+    ],
+  );
 }
