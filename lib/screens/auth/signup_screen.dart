@@ -150,7 +150,7 @@ class _Step1 extends StatelessWidget {
         TextFormField(
           controller: nameCtrl,
           decoration: InputDecoration(
-            hintText: 'e.g. Hammad Khan',
+            hintText: 'e.g. Adil Fayaz',
             prefixIcon: const Icon(Icons.person_outline, size: 20),
             fillColor: ext.surfaceColor,
           ),
