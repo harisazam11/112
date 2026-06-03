@@ -12,9 +12,18 @@ import '../add_item_screen.dart';
 import '../my_posts_screen.dart';
 import '../notifications_screen.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   final VoidCallback? onProfileTap;
   const DashboardScreen({super.key, this.onProfileTap});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  bool _showAll = false;
+
+  static const int _previewCount = 4;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +33,9 @@ class DashboardScreen extends StatelessWidget {
     final theme = context.watch<ThemeProvider>();
     final user = auth.user;
     final firstName = user?.name.split(' ').first ?? 'Student';
-    final recent = items.all.take(6).toList();
+    final allItems = items.all;
+    final total = allItems.length;
+    final recent = _showAll ? allItems : allItems.take(_previewCount).toList();
 
     return Scaffold(
       backgroundColor: ext.bgColor,
@@ -41,7 +52,7 @@ class DashboardScreen extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () => onProfileTap?.call(),
+                      onTap: () => widget.onProfileTap?.call(),
                       child: Row(children: [
                         AvatarWidget(name: user?.name ?? '', size: 40),
                         const SizedBox(width: 12),
@@ -164,10 +175,14 @@ class DashboardScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                   Text('Recent activity', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: ext.textColor, letterSpacing: -0.17)),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text('See all', style: TextStyle(color: ext.primaryColor, fontWeight: FontWeight.w600)),
-                  ),
+                  if (total > _previewCount)
+                    TextButton(
+                      onPressed: () => setState(() => _showAll = !_showAll),
+                      child: Text(
+                        _showAll ? 'Show less' : 'Show all $total posts',
+                        style: TextStyle(color: ext.primaryColor, fontWeight: FontWeight.w600),
+                      ),
+                    ),
                 ]),
               ),
               const SizedBox(height: 6),
