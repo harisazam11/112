@@ -71,7 +71,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const SizedBox(width: 8),
                   _IconBtn(
                     onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
-                    badge: true,
                     child: const Icon(Icons.notifications_outlined, size: 18),
                   ),
                 ]),

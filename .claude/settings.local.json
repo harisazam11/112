@@ -15,7 +15,9 @@
       "Bash(Get-ChildItem -Path \"D:\\\\BUITEMS SE-06\\\\Computer Networks\\\\Ms Poma Panezai\\\\Projects\\\\Bonus Exercise\\\\Campus Lost & Found App\\\\lib\" -Recurse -Filter \"*.dart\")",
       "Bash(Select-Object -ExpandProperty FullName)",
       "Bash(flutter analyze *)",
-      "Bash(del *)"
+      "Bash(del *)",
+      "Bash(Get-ChildItem *)",
+      "Bash(grep \"\\\\.dart$\")"
     ]
   }
 }
