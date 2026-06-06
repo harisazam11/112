@@ -7,8 +7,8 @@ class StorageService {
   static const _uploadPreset = 'campus_lost_found';
 
   Future<String> uploadItemImage(File file, String uid) async {
-    final uri = Uri.parse(
-        'https://api.cloudinary.com/v1_1/$_cloudName/image/upload');
+    final uri =
+        Uri.parse('https://api.cloudinary.com/v1_1/$_cloudName/image/upload');
     final request = http.MultipartRequest('POST', uri)
       ..fields['upload_preset'] = _uploadPreset
       ..files.add(await http.MultipartFile.fromPath('file', file.path));
@@ -17,7 +17,8 @@ class StorageService {
     final body = await streamed.stream.bytesToString();
 
     if (streamed.statusCode != 200) {
-      throw Exception('Image upload failed (${streamed.statusCode}). Please check your connection and try again.');
+      throw Exception(
+          'Image upload failed (${streamed.statusCode}). Please check your connection and try again.');
     }
 
     final json = jsonDecode(body) as Map<String, dynamic>;
