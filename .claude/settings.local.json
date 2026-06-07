@@ -18,7 +18,9 @@
       "Bash(del *)",
       "Bash(Get-ChildItem *)",
       "Bash(grep \"\\\\.dart$\")",
-      "PowerShell(Get-ChildItem \"C:\\\\dev\\\\campus_lost_found\" -Name | Where-Object {$_ -match \"buitems\"}; if \\(Test-Path \"C:\\\\dev\\\\campus_lost_found\\\\assets\"\\) { Get-ChildItem \"C:\\\\dev\\\\campus_lost_found\\\\assets\" -Recurse -Name } else { \"assets/ folder not found\" })"
+      "PowerShell(Get-ChildItem \"C:\\\\dev\\\\campus_lost_found\" -Name | Where-Object {$_ -match \"buitems\"}; if \\(Test-Path \"C:\\\\dev\\\\campus_lost_found\\\\assets\"\\) { Get-ChildItem \"C:\\\\dev\\\\campus_lost_found\\\\assets\" -Recurse -Name } else { \"assets/ folder not found\" })",
+      "PowerShell(Get-ChildItem \"C:\\\\dev\\\\campus_lost_found\\\\android\" -Recurse -Name | Where-Object {$_ -match \"google-services|local.properties|\\\\.gradle\"})",
+      "PowerShell(Get-ChildItem \"C:\\\\dev\\\\campus_lost_found\\\\android\\\\app\" -Recurse -Name | Where-Object {$_ -match \"google-services\"})"
     ]
   }
 }
