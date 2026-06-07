@@ -92,13 +92,14 @@ class _SplashScreenState extends State<SplashScreen>
                       BoxShadow(color: Color(0x666E4FF6), blurRadius: 30, offset: Offset(0, 10)),
                     ],
                   ),
-                  child: const Center(
-                    child: Text(
-                      'CLF',
-                      style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w800,
-                        fontSize: 30, letterSpacing: -1.2,
-                      ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(96 * 0.30),
+                    child: Image.asset(
+                      'assets/buitems_logo.webp',
+                      width: 96,
+                      height: 96,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                     ),
                   ),
                 ),
@@ -108,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen>
                 position: _textSlide,
                 child: FadeTransition(
                   opacity: _textFade,
-                  child: const Column(children: [
+                  child: Column(children: [
                     Text(
                       'Campus Lost & Found',
                       style: TextStyle(
@@ -118,7 +119,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                     SizedBox(height: 6),
                     Text(
-                      'BUITEMS · find your way back',
+                      'Lost on campus? Let\'s find it.',
                       style: TextStyle(
                         fontSize: 14, color: Color(0xB3FFFFFF),
                         letterSpacing: 0.28,
