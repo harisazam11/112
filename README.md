@@ -1,34 +1,32 @@
 # Campus Lost & Found
 
-A Flutter-based Android app that helps BUITEMS university students report lost items and post found items — all in one place on campus.
+A Flutter Android app for BUITEMS students to report, search, and recover lost and found items on campus.
 
 ---
 
 ## Overview
 
-Campus Lost & Found is a mobile application built for the student community at BUITEMS. Students can sign up, post lost or found items with photos, browse and search active listings, and contact the person who posted an item. Items move through a simple lifecycle (active → claimed → returned / closed), giving both the poster and the finder a clear view of each item's status. The app targets Android and uses Firebase as its backend for authentication and data storage, with Cloudinary handling image uploads.
+Campus Lost & Found is a mobile application built for the student community at Balochistan University of Information Technology, Engineering and Management Sciences (BUITEMS). It gives students a central place to post lost or found items with photos, browse and search listings by category or location, and coordinate item returns through a structured status lifecycle — all backed by Firebase and Cloudinary with no custom backend server.
 
 ---
 
 ## Features
 
-- **Email/password authentication** — sign up, log in, and persistent login across sessions
-- **Welcome / onboarding screen** — clean entry point for new and returning users
-- **Post lost or found items** — title, description, category, location, date, and an optional photo
-- **Photo upload** — pick an image from the gallery; uploaded to Cloudinary and linked to the item
-- **Browse by tab** — separate Lost and Found tabs on the home dashboard
-- **Search and filter** — search by keyword across active listings
-- **Item detail screen** — full view of an item with status badge and poster info
-- **Item status lifecycle** — Active → Claimed → Returned / Closed; poster can update status
-- **My Posts screen** — view and manage only your own listings
-- **View poster profile** — see the public profile of who posted an item
-- **User profile screen** — display name, email, phone, department, semester, and post stats
-- **Edit profile** — update display name, phone, department, and semester
-- **Dark mode** — full light/dark theme toggle, persisted across sessions
-- **Privacy screen** — privacy and data information
-- **Preferences screen** — user preference settings
-- **Notifications screen** — notifications section (see Known Limitations)
-- **Privacy masking** — sensitive fields (e.g. ID card numbers) are handled with care in item descriptions
+- **Email/password authentication** with persistent login (session survives app restarts)
+- **Splash screen** with animated BUITEMS branding, then auto-route based on auth state
+- **Post items** — report a lost or found item; a photo is **required** when creating a post
+- **Camera + gallery upload** — pick an image from the gallery or capture one with the camera; uploaded to Cloudinary via HTTP
+- **Lost tab / Found tab** — separate browsable lists for each item type
+- **Dashboard** — at-a-glance stats and recent activity
+- **Search & filter** — full-text search with filters for item type, category, location, and status
+- **Item detail** — full photo, description, status badge, and poster info
+- **Status lifecycle** — items move through `active → claimed → returned → closed`
+- **My Posts** — view and manage your own listings
+- **Poster profile** — tap any poster to view their public profile
+- **Profile & edit profile** — view and update display name, avatar, and contact info
+- **Dark mode** — system-aware with manual toggle; preference persisted via Shared Preferences
+- **Privacy masking** — ID card numbers are partially masked in the UI to protect sensitive data
+- **Preferences, Privacy, and Notifications screens** — in-app settings navigation
 
 ---
 
@@ -36,41 +34,45 @@ Campus Lost & Found is a mobile application built for the student community at B
 
 | Layer | Technology |
 |---|---|
-| UI framework | Flutter 3.44.0 (Dart SDK ≥ 3.3.0) |
-| Authentication | Firebase Authentication |
+| UI Framework | Flutter (Dart) |
+| Authentication | Firebase Auth |
 | Database | Cloud Firestore |
-| Image storage | Cloudinary (via HTTP upload) |
-| State management | Provider |
-| Local persistence | Shared Preferences |
+| Image Storage | Cloudinary (HTTP multipart upload) |
+| State Management | Provider |
+| Local Persistence | Shared Preferences |
 
 ### Dependencies (`pubspec.yaml`)
 
 ```yaml
-# Firebase
-firebase_core: ^3.13.0
-firebase_auth: ^5.5.1
-cloud_firestore: ^5.6.0
-firebase_storage: ^12.4.3
+dependencies:
+  flutter:
+    sdk: flutter
 
-# State management
-provider: ^6.1.5
+  # Firebase
+  firebase_core: ^3.13.0
+  firebase_auth: ^5.5.1
+  cloud_firestore: ^5.6.0
+  firebase_storage: ^12.4.3
 
-# UI & fonts
-google_fonts: ^6.2.1
-cached_network_image: ^3.4.1
+  # State management
+  provider: ^6.1.5
 
-# Image picker
-image_picker: ^1.1.2
+  # UI & fonts
+  google_fonts: ^6.2.1
+  cached_network_image: ^3.4.1
 
-# HTTP client (Cloudinary image upload)
-http: ^1.2.2
+  # Image picker
+  image_picker: ^1.1.2
 
-# Utilities
-intl: ^0.19.0
-url_launcher: ^6.3.1
-shared_preferences: ^2.3.3
-uuid: ^4.5.1
-cupertino_icons: ^1.0.8
+  # HTTP client (Cloudinary upload)
+  http: ^1.2.2
+
+  # Utilities
+  intl: ^0.19.0
+  url_launcher: ^6.3.1
+  shared_preferences: ^2.3.3
+  uuid: ^4.5.1
+  cupertino_icons: ^1.0.8
 ```
 
 ---
@@ -79,57 +81,57 @@ cupertino_icons: ^1.0.8
 
 ```
 lib/
-├── main.dart                   # App entry point; Firebase init, routing, providers
-├── firebase_options.dart       # FlutterFire-generated Firebase config (no google-services.json needed)
+├── main.dart                          # App entry point; Firebase init; Provider setup
+├── firebase_options.dart              # FlutterFire-generated Firebase config (no google-services.json needed)
 │
 ├── core/
-│   ├── app_colors.dart         # Central colour palette
-│   ├── app_constants.dart      # App-wide constants (categories, statuses, etc.)
-│   └── app_theme.dart          # Light and dark ThemeData + custom theme extension
+│   ├── app_colors.dart                # Centralized color palette (light + dark)
+│   ├── app_constants.dart             # Cloudinary cloud name/preset; app-wide string constants
+│   └── app_theme.dart                 # ThemeData definitions for light and dark modes
 │
 ├── models/
-│   ├── item_model.dart         # Item data model (lost/found post)
-│   └── user_model.dart         # User profile data model
+│   ├── item_model.dart                # Data class for a lost/found item (Firestore ↔ Dart)
+│   └── user_model.dart                # Data class for a user profile (Firestore ↔ Dart)
 │
 ├── services/
-│   ├── auth_service.dart       # Firebase Authentication calls (sign up, sign in, sign out)
-│   ├── firestore_service.dart  # Firestore CRUD for items and user profiles
-│   └── storage_service.dart   # Cloudinary image upload via HTTP multipart
+│   ├── auth_service.dart              # Firebase Auth calls (sign in, sign up, sign out)
+│   ├── firestore_service.dart         # All Firestore reads/writes (items, users)
+│   └── storage_service.dart           # Cloudinary HTTP upload logic
 │
 ├── providers/
-│   ├── auth_provider.dart      # Auth state; exposes current user to the widget tree
-│   ├── items_provider.dart     # Items state; fetches and caches listings from Firestore
-│   └── theme_provider.dart    # Dark/light mode toggle; persists via SharedPreferences
+│   ├── auth_provider.dart             # Auth state; wraps AuthService; exposes current user
+│   ├── items_provider.dart            # Item list state; wraps FirestoreService + StorageService
+│   └── theme_provider.dart            # Dark/light mode toggle; persists via SharedPreferences
 │
 ├── screens/
-│   ├── splash_screen.dart      # Animated splash; routes to home or welcome after auth check
-│   ├── welcome_screen.dart     # Onboarding / entry screen (login or sign-up choice)
-│   ├── add_item_screen.dart    # Form to post a new lost or found item
-│   ├── item_detail_screen.dart # Full detail view of a single item
-│   ├── search_screen.dart      # Search and filter across listings
-│   ├── my_posts_screen.dart    # Lists the current user's own posts
-│   ├── poster_screen.dart      # Public profile view of another user
-│   ├── profile_screen.dart     # Current user's profile and account info
-│   ├── edit_profile_screen.dart# Edit name, phone, department, semester
-│   ├── notifications_screen.dart # Notifications (placeholder — see Known Limitations)
-│   ├── preferences_screen.dart # User preferences
-│   ├── privacy_screen.dart     # Privacy and data information
+│   ├── splash_screen.dart             # Animated launch screen; routes to welcome or home
+│   ├── welcome_screen.dart            # Landing page with login/signup buttons
+│   ├── add_item_screen.dart           # Form to post a new lost/found item with required photo
+│   ├── item_detail_screen.dart        # Full item view; status update controls; poster link
+│   ├── search_screen.dart             # Search bar + filter chips (type/category/location/status)
+│   ├── my_posts_screen.dart           # Current user's own listings
+│   ├── poster_screen.dart             # Public profile view of any item's poster
+│   ├── profile_screen.dart            # Logged-in user's own profile
+│   ├── edit_profile_screen.dart       # Edit display name, avatar, and contact info
+│   ├── notifications_screen.dart      # Notifications placeholder screen
+│   ├── preferences_screen.dart        # App preferences (dark mode toggle, etc.)
+│   ├── privacy_screen.dart            # Privacy policy / data info screen
 │   │
 │   ├── auth/
-│   │   ├── login_screen.dart   # Email/password login form
-│   │   └── signup_screen.dart  # New account registration form
+│   │   ├── login_screen.dart          # Email/password login form
+│   │   └── signup_screen.dart         # New account registration form
 │   │
 │   └── home/
-│       ├── main_nav_screen.dart  # Bottom navigation shell
-│       ├── dashboard_screen.dart # Home dashboard with recent/featured items
-│       ├── lost_screen.dart      # Browsable list of Lost items
-│       └── found_screen.dart     # Browsable list of Found items
+│       ├── main_nav_screen.dart       # Bottom nav shell (Lost / Found / Dashboard)
+│       ├── dashboard_screen.dart      # Stats cards and recent items
+│       ├── lost_screen.dart           # Paginated list of lost-item posts
+│       └── found_screen.dart          # Paginated list of found-item posts
 │
 └── widgets/
-    ├── item_card_widget.dart   # Reusable card for displaying an item in a list
-    ├── status_badge_widget.dart# Coloured badge showing item status
-    ├── avatar_widget.dart      # User avatar with initials fallback
-    └── clf_logo_widget.dart    # App logo widget
+    ├── avatar_widget.dart             # Circular avatar with fallback initials
+    ├── clf_logo_widget.dart           # BUITEMS-branded app logo widget
+    ├── item_card_widget.dart          # Reusable card tile for item lists
+    └── status_badge_widget.dart       # Colored badge showing item status
 ```
 
 ---
@@ -142,113 +144,95 @@ The app follows a layered architecture:
 Models  →  Services  →  Providers  →  Screens / Widgets
 ```
 
-- **Models** define the data structures (`ItemModel`, `UserModel`).
-- **Services** contain all external calls — Firebase Auth, Firestore reads/writes, and Cloudinary HTTP uploads. No Flutter/UI code lives here.
-- **Providers** (via the `provider` package) consume the services and expose reactive state to the widget tree. Each provider is registered at the app root in `main.dart`.
-- **Screens and widgets** read from providers using `context.watch` / `context.read` and never call Firebase directly.
+- **Models** (`item_model.dart`, `user_model.dart`) define plain Dart data classes with `fromMap`/`toMap` serialization for Firestore.
+- **Services** (`auth_service.dart`, `firestore_service.dart`, `storage_service.dart`) are thin wrappers around Firebase Auth, Cloud Firestore, and the Cloudinary HTTP API. They contain no UI logic.
+- **Providers** (`auth_provider.dart`, `items_provider.dart`, `theme_provider.dart`) use the `provider` package to hold and expose reactive state. They call services and notify listeners when state changes.
+- **Screens and Widgets** consume providers via `context.watch` / `context.read`. They never call Firebase or Cloudinary directly.
 
-Firebase handles authentication and the Firestore database. Images are uploaded directly from the device to Cloudinary over HTTPS; the returned URL is stored in the Firestore item document.
+Firebase handles authentication and the Firestore document database. Cloudinary handles image storage — photos are uploaded via an HTTP multipart `POST` and the returned URL is saved to Firestore.
 
 ---
 
 ## Prerequisites
 
-- **Flutter SDK 3.44.0** or later (the version this project was built and tested with)
-- **Dart SDK ≥ 3.3.0** (bundled with Flutter)
+- **Flutter SDK** `>=3.3.0 <4.0.0` (built and tested on Flutter 3.x stable)
+- **Dart SDK** (bundled with Flutter)
 - **Android Studio** or **VS Code** with the Flutter and Dart plugins installed
-- An **Android device** with USB debugging enabled, or an **Android emulator**
-- Internet connection (required at runtime for Firebase and Cloudinary)
+- An **Android device** or **emulator** (API 21+)
+- **Internet connection** (required at runtime for Firebase and Cloudinary)
 
-> This project targets **Android only**. The `ios/`, `web/`, and desktop platform folders are Flutter-generated stubs and have not been configured or tested.
+> **Android only.** iOS targets have not been configured.
 
 ---
 
 ## How to Run
 
-**1. Install Flutter**
+1. **Place the project folder — read this carefully on Windows:**
 
-Download and install Flutter from [flutter.dev](https://flutter.dev/docs/get-started/install). Confirm the installation:
+   > - The project folder **must be on the same drive as your Flutter SDK** (e.g. Flutter on `C:\` → project on `C:\`). Putting the project on a different drive (e.g. `D:\`) causes a Kotlin cross-drive build error and the app will not compile.
+   > - The folder path **must not contain spaces or special characters** such as `&`. Use a plain path like `C:\dev\campus_lost_found`.
 
-```bash
-flutter doctor
-```
+2. **Install dependencies:**
 
-All required items (Flutter, Android toolchain, connected device) should show a green checkmark.
+   ```bash
+   flutter pub get
+   ```
 
-**2. Place the project folder**
+3. **Connect an Android device** with USB debugging enabled.
 
-Extract or copy the project folder to a location of your choice. The folder should contain `pubspec.yaml` at its root.
+   > **Xiaomi / Redmi phones / Any Andriod Phones:** In addition to USB debugging, you must also enable **"Install via USB"** in Developer Options — without it the build succeeds but the app fails to install on the device.
 
-**3. Install dependencies**
+   Confirm Flutter detects the device:
 
-Open a terminal in the project root and run:
+   ```bash
+   flutter devices
+   ```
 
-```bash
-flutter pub get
-```
+4. **Run the app:**
 
-This downloads all packages listed in `pubspec.yaml` and generates the `.dart_tool/` files needed to build.
+   ```bash
+   flutter run
+   ```
 
-**4. Connect a device or start an emulator**
+5. **Build a release APK** (optional):
 
-- **Physical device:** connect via USB, enable USB debugging in Developer Options, and confirm Flutter sees it:
+   ```bash
+   flutter build apk --release
+   ```
 
-  ```bash
-  flutter devices
-  ```
-
-- **Emulator:** open Android Studio → Device Manager → start a virtual device (API 26 or higher recommended).
-
-**5. Run the app**
-
-```bash
-flutter run
-```
-
-Flutter will build and deploy a debug APK to the connected device. Use `r` in the terminal to hot-reload and `R` for a full restart.
-
-**6. Build a release APK (optional)**
-
-```bash
-flutter build apk --release
-```
-
-The output APK will be at `build/app/outputs/flutter-apk/app-release.apk`.
+   Output: `build/app/outputs/flutter-apk/app-release.apk`
 
 ---
 
 ## Firebase / Backend Notes
 
-- Firebase configuration is generated by the FlutterFire CLI and lives entirely in `lib/firebase_options.dart`. There is **no separate `google-services.json`** file — it is not needed with this setup.
-- The app connects to a Firebase project for two services:
-  - **Firebase Authentication** — email/password sign-up and sign-in.
-  - **Cloud Firestore** — stores item listings and user profile documents.
-- **Cloudinary** is used for image storage. When a user attaches a photo to an item post, the image is uploaded from the device directly to Cloudinary over HTTPS, and the resulting URL is saved in the item's Firestore document. The Cloudinary credentials (cloud name, upload preset) are stored in `lib/core/app_constants.dart`.
-- No backend server or custom API is required — the app communicates directly with Firebase and Cloudinary.
+- Firebase configuration is generated by the FlutterFire CLI and lives in `lib/firebase_options.dart`. There is **no separate `google-services.json`** file needed.
+- **Firebase Authentication** handles all user sign-up and sign-in (email/password).
+- **Cloud Firestore** stores all item posts and user profile documents.
+- **Cloudinary** stores all images. When a user attaches a photo to a post, the image is uploaded directly from the device to Cloudinary over HTTPS; the returned URL is saved in the Firestore item document. The Cloudinary cloud name and unsigned upload preset are defined in `lib/core/app_constants.dart`.
+- No custom backend server is required — the app communicates directly with Firebase and Cloudinary.
 
 ---
 
 ## Known Limitations / Future Work
 
-The following features are present in the UI but are not fully implemented:
-
-- **Contact buttons** (Call, WhatsApp, Email on the item detail screen) — buttons exist but are placeholders and do not launch the dialler or messaging apps.
-- **Notifications screen** — the screen is a placeholder; no real push notification system is wired up.
-- **Change password** — accessible from the profile/preferences area but not implemented.
-- **BUITEMS email verification** — no enforcement that a sign-up email belongs to a `@buitems.edu.pk` domain.
-- **Admin / moderation panel** — there is no admin interface to remove inappropriate listings or manage users.
-- **iOS support** — not configured or tested; Android only.
+- **Contact buttons** (Call, Email, WhatsApp on the item detail screen) are rendered but are placeholders — they do not yet launch the dialer or messaging apps.
+- **Notifications screen** is a placeholder; real push notifications have not been implemented.
+- **Change password** is not implemented on the profile/settings screens.
+- **No BUITEMS email-domain verification** — any valid email address can register; `.edu.pk` domain enforcement is not in place.
+- **No admin or moderation panel** — there is no backend dashboard for reviewing or removing posts.
+- **iOS not configured** — no Runner scheme, no Apple bundle identifiers. Android only.
 
 ---
 
 ## Author / Course
 
-| Field | Details |
+| Field | Detail |
 |---|---|
-| **Name** | [FILL IN] |
-| **Student ID** | [FILL IN] |
+| **Name** | Abdullah |
+| **Student ID (CMSID)** | 62724 |
 | **Department** | Software Engineering |
-| **Semester** | [FILL IN] |
-| **Course** | [FILL IN] |
-| **Instructor** | [FILL IN] |
-| **Institution** | BUITEMS — Balochistan University of Information Technology, Engineering and Management Sciences |
+| **Semester** | 6th |
+| **Course** | CN |
+| **Instructor** | Miss Poma Panezai |
+| **Institution** | BUITEMS |
